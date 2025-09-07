@@ -1,0 +1,45 @@
+\documentclass[a4paper, dvipsnames]{book}
+
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage[T1, T2A]{fontenc}
+\usepackage[fontsize=14pt]{fontsize}
+\usepackage{anyfontsize}
+\usepackage[english, russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{sectsty}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{physics}
+\usepackage{cleveref}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{enumitem}
+\usepackage{ulem}
+\usepackage{fancyhdr}
+\usepackage{float}
+
+\input{formatting.tex}
+\input{shortcuts.tex}
+\input{theorems.tex}
+
+\hypersetup{
+	colorlinks=true,
+	urlcolor=cyan,
+	linkcolor=cyan,
+}
+
+\title{Sections and Chapters}
+\author{Overleaf}
+\date{\today}
+
+\begin{document}
+	{\hypersetup{hidelinks}\tableofcontents}
+	
+	\pagestyle{plain}
+	
+	\include{content.tex}
+\end{document}

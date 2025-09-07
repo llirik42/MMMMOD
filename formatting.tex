@@ -1,0 +1,26 @@
+\linespread{1.2}
+
+\renewcommand{\rmdefault}{cmr}
+\renewcommand{\sfdefault}{cmss}
+\renewcommand{\ttdefault}{cmtt}
+\renewcommand{\rmdefault}{cmss}
+\renewcommand{\ttdefault}{cmss}
+
+\newcommand{\definitionfont}[1]{\textbf{#1}}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}
+{\chaptertitlename\ \thechapter\bigskip}{0pt}{\Huge}
+
+\titleformat{\section}
+{\normalfont\huge\bfseries}
+{\thesection}{1em}{\huge}
+
+\titleformat{\subsection}
+{\normalfont\LARGE\bfseries}
+{\thesubsection}{1em}{\LARGE}
+
+\fancyhead{}
+\fancyhead[LE,RO]{\nouppercase{\rightmark}}
+\fancyhead[LO,RE]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
