@@ -1,4 +1,4 @@
-\documentclass[a4paper, dvipsnames]{book}
+\documentclass[a4paper, dvipsnames, oneside]{book}
 
 \usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 \usepackage[T1, T2A]{fontenc}
@@ -21,6 +21,7 @@
 \usepackage{ulem}
 \usepackage{fancyhdr}
 \usepackage{float}
+\usetikzlibrary{arrows.meta}
 
 \input{formatting.tex}
 \input{shortcuts.tex}
@@ -32,11 +33,18 @@
 	linkcolor=cyan,
 }
 
-\title{Sections and Chapters}
-\author{Overleaf}
+\title{
+	\textsc{Математические методы и модели принятия оптимальных решений} \\[0cm]
+}
+\author{
+	\Large Береснев Владимир Леонидович
+	\\[15cm]
+	ФИТ НГУ
+}
 \date{\today}
 
 \begin{document}
+	\maketitle	
 	{\hypersetup{hidelinks}\tableofcontents}
 	
 	\pagestyle{plain}
