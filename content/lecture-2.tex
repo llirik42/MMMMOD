@@ -94,6 +94,7 @@ y = \begin{cases}
 			1,& i \in I^1 \Leftrightarrow \text{$A_i$ --- ложь}\\
 		\end{cases}
 	\]
+	
 	Ещё введём булевы переменную $y$, которая обозначает следующее
 	\[
 		y = \begin{cases}
@@ -116,6 +117,7 @@ y = \begin{cases}
 			1,& k \in K^1 \Leftrightarrow \text{$B_k$ --- ложь}\\
 		\end{cases}
 	\]
+	
 	Ещё введём булевы переменную $x$, которая обозначает следующее
 	\[
 		x = \begin{cases}
@@ -239,42 +241,61 @@ y = \begin{cases}
 
 Пусть при решение задачи в некотором выражении нам встретилась какая-то нелинейность, например $x \cdot y$ ($x$ и $y$ --- булевы переменные). Работать с нелинейностями неудобно, поэтому хотелось бы заменить это на новую булеву переменную
 \[
-	z = x \cdot y.
+	\hat{z} = \hat{x} \cdot \hat{y}.
 \]
 
-Однако просто заменить в выражении $x \cdot$ на $z$ нельзя, поскольку нужно изменить ограничения. Нам нужно ввести ограничение на новую переменную
+Однако просто заменить в выражении $\hat{x} \cdot \hat{y}$ на $\hat{z}$ нельзя, поскольку нужно изменить ограничения. Нам нужно ввести ограничение на новую переменную
 \[
-	z = 1 \Longleftrightarrow x = 1 \land y = 1
+	\hat{z} = 1 \Longleftrightarrow \hat{x} = 1 \land \hat{y} = 1
 \]
 
 Данное ограничение можно расписать через две импликации
 \begin{enumerate}
-	\item Если $z = 1$, то $x = 1$ и $y = 1$. Данное логическое условие можно записать алгебраически, используя \ref{fact:complex_conditions}.
+	\item Если $\hat{z} = 1$, то $\hat{x} = 1$ и $\hat{y} = 1$. Данное логическое условие можно записать алгебраически, используя \cref{fact:complex_conditions}. Будем использовать самый общий случай
 	\[
-		2 \cdot (1 - z) \ge (1 - x) + (1 - y)
+		x = \begin{pmatrix}\hat{z}\end{pmatrix}, \qquad y = \begin{pmatrix} \hat{x} & \hat{y} \end{pmatrix},
 	\]
-
 	\[
-		2z \le x + y.
+		I^0 = \O, \quad I^1 = \{1\}, \qquad K^0 = \O, \quad K^1 = \{1, 2\}
 	\]
-	
-	\item Если $x = 1$ и $y = 1$, то $z = 1$. Данное логическое условие можно записать алгебраически следующим образом
 	\[
-		\begin{cases}
-			1 - x \ge 1 - z, \\
-			1 - y \ge 1 - z;
-		\end{cases}
+		\abs{K^0 \cup K^1} \cdot \Big(\sum_{i \in I^1}(1-x_i) + \sum_{i \in I^0}x_i\Big) \ge \sum_{k \in K^1}(1-y_k) + \sum_{k \in K^0}y_k,
+	\]	
+	\[\Updownarrow\]	
+	\[
+		2 \cdot (1 - \hat{z}) \ge (1 - \hat{x}) + (1 - \hat{y}),
 	\]
-	
 	\[
-		2 \cdot (1 - z) \ge (1 - x) + (1 - y),
+		2\hat{z} \le \hat{x} + \hat{y}.
 	\]
 	
+	\item Если $\hat{x} = 1$ и $\hat{y} = 1$, то $\hat{z} = 1$. Данное логическое условие можно записать алгебраически, используя \cref{fact:complex_conditions}. Будем использовать самый общий случай
 	\[
-		2z \le x + y.
+		x = \begin{pmatrix}\hat{x} & \hat{y}\end{pmatrix}, \qquad y = \begin{pmatrix} \hat{z} \end{pmatrix},
+	\]
+	\[
+		I^0 = \O, \quad I^1 = \{1, 2\}, \qquad K^0 = \O, \quad K^1 = \{1\}
+	\]
+	\[
+		\abs{K^0 \cup K^1} \cdot \Big(\sum_{i \in I^1}(1-x_i) + \sum_{i \in I^0}x_i\Big) \ge \sum_{k \in K^1}(1-y_k) + \sum_{k \in K^0}y_k,
+	\]
+	\[\Updownarrow\]
+	\[
+		(1 - \hat{x}) + (1 - \hat{y}) \ge 1 - \hat{z},
+	\]
+	\[
+		\hat{z} + 1 \ge \hat{x} + \hat{y}.
 	\]
 \end{enumerate}
 
-\fact[Нахождение минимума]
+Итого при данной замене нужно добавить два ограничения
+\[
+	\boxed{\begin{cases}
+		2\hat{z} \le \hat{x} + \hat{y}, \\
+			\hat{z} + 1 \ge \hat{x} + \hat{y}.
+	\end{cases}}
+\]
 
-Пусть в нашем выражении где-то встретилось $u = \min\{x_1, x_2\}$.
+\fact[нахождение минимума]
+
+Пусть при решение задачи в некотором выражении нам встретилась конструкция $u = \min\{x_1, x_2\}$.
