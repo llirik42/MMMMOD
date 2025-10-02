@@ -1510,7 +1510,7 @@ P_4 = \{8\}, \quad P_5 = \{4, 5, 6\}, \quad P_6 = \{6\}
 \end{itemize}
 
 \[
-\sum_{i=1}^{N}c_i(x) \to \underset{(x_i)}{\substack{\max \\ \min}}
+\sum_{i=1}^{N}c_i(x) \to \underset{(x_i)}{\max / \min}
 \]
 \[
 \sum_{i=1}^{N} h_i(x_i) \le b,
@@ -1627,7 +1627,12 @@ T_i(p, q) \in P_{i+1}
 \Updownarrow
 \]
 \[
-0 \le p - h_i(q) \le b \quad \Longrightarrow \quad \boxed{h_i(q) \le p}.
+0 \le p - h_i(q) \le b,
+\]
+
+а значит
+\[
+\boxed{h_i(q) \le p}
 \]
 
 Таким образом, решение $q$ на $i$-ом шаге в состоянии $p$ является допустимым тогда и только когда, когда
@@ -1645,7 +1650,7 @@ T_i(p, q) \in P_{i+1}
 Пусть $p \in P_N$, запишем выражение для $f_N(p)$
 
 \[
-f_N(p) = \max_{q \in Q_N(p)} \{c_N(q).\}
+f_N(p) = \max_{q \in Q_N(p)} \{c_N(q)\}
 \]
 
 Вспомним, что $\{c_i(x)\}$ --- возрастающие функции, поэтому максимум $c_N(q)$ достигается при $q_{\max} \in Q_N(p)$. Таким образом
@@ -1653,7 +1658,7 @@ f_N(p) = \max_{q \in Q_N(p)} \{c_N(q).\}
 f_N(p) = c_N(q_{\max}),
 \]
 
-при $q_{\max}$, которое удовлетворяют ограничениям
+при $q_{\max}$, которое удовлетворяет ограничениям
 \[
 \begin{cases}
 	0 \le q \le a_i, \\
@@ -1700,7 +1705,7 @@ T = N \cdot b \cdot a.
 
 значит
 \[
-T = N \cdot b \cdot a = b \cdot N \cdot a \le b \cdot \abs{p}.
+T = N \cdot b \cdot a = b \cdot N \cdot a \le b \cdot \abs{p}
 \]
 
 Таким образом,
