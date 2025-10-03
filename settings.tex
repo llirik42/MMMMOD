@@ -1,0 +1,65 @@
+\definecolor{darkblue}{rgb}{0,0,0.5}
+
+\hypersetup{
+	colorlinks=true,
+	urlcolor=cyan,
+	linkcolor=darkblue,
+}
+
+\linespread{1.15}
+
+\renewcommand{\rmdefault}{cmr}
+\renewcommand{\sfdefault}{cmss}
+\renewcommand{\ttdefault}{cmtt}
+\renewcommand{\rmdefault}{cmss}
+\renewcommand{\ttdefault}{cmss}
+
+\newcommand{\definitionfont}[1]{\textit{#1}}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}
+{\chaptertitlename\ \thechapter\bigskip}{0pt}{\Huge}
+
+\titleformat{\section}
+{\normalfont\huge\bfseries}
+{\thesection}{1em}{\huge}
+
+\titleformat{\subsection}
+{\normalfont\LARGE\bfseries}
+{\thesubsection}{1em}{\LARGE}
+
+\fancyhead{}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\Q}{\mathcal{Q}}
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\maps}{\longmapsto}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+\newcommand{\const}{\textit{const}}
+\renewcommand{\land}{\;\&\;}
+
+\newtheoremstyle{mainstyle}
+{\topsep}
+{\topsep}
+{\normalfont}
+{0pt}
+{\Large\bfseries}
+{\newline\null}
+{\parindent}
+{\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
+
+\theoremstyle{mainstyle}
+\newtheorem*{definition}{Определение}
+\newtheorem*{unnumberedfact}{Утверждение}
+\newtheorem{fact}{Утверждение}
+\newtheorem*{prooof}{Доказательство}
+\newtheorem*{example}{Пример}
+\newtheorem*{remark}{Замечание}
+\newtheorem*{solution}{Решение}
+\newtheorem*{returntoproblem}{Возвращение к задаче}
+\newtheorem*{problem}{Задача}
+\newtheorem*{implication}{Следствие}
+
+\crefname{fact}{утверждение}{утверждения}
