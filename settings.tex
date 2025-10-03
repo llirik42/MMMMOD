@@ -42,15 +42,15 @@
 \renewcommand{\rmdefault}{cmss}
 \renewcommand{\ttdefault}{cmss}
 
-\titleformat{\chapter}{\normalfont\huge\bfseries}{}{0pt}{\Huge}[\vspace{0ex}\titlerule]
+\titleformat{\chapter}{\huge\bfseries}{\thechapter}{0.5em}{\huge}[\vspace{0ex}\titlerule]
 
 \titleformat{\section}
-{\normalfont\huge\bfseries}
-{\thesection}{1em}{\huge}
+{\normalfont\LARGE\bfseries}
+{\thesection}{0.5em}{\LARGE}
 
 \titleformat{\subsection}
-{\normalfont\LARGE\bfseries}
-{\thesubsection}{1em}{\LARGE}
+{\normalfont\Large\bfseries}
+{\thesubsection}{0.5em}{\Large}
 
 \fancyhead{}
 \fancyfoot[C]{\thepage}
@@ -69,7 +69,7 @@
 {\topsep}
 {\normalfont}
 {0pt}
-{\Large\bfseries}
+{\large\bfseries}
 {\newline\null}
 {\parindent}
 {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
