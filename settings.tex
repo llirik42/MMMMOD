@@ -18,6 +18,7 @@
 \usepackage{ulem}
 \usepackage{fancyhdr}
 \usepackage{float}
+\usepackage[most]{tcolorbox}
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{svg}
@@ -57,13 +58,21 @@
 
 \renewcommand{\P}{\mathcal{P}}
 \newcommand{\Q}{\mathcal{Q}}
-\renewcommand{\O}{\mathcal{O}}
+
 \newcommand{\maps}{\longmapsto}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt] (char) {$#1$};}}
 \newcommand{\const}{\textit{const}}
 \renewcommand{\land}{\;\&\;}
 \newcommand{\definitionfont}[1]{\textit{#1}}
-\newcommand{\comment}[1]{\noindent\fbox{\parbox{\linewidth}{#1}}}
+\newcommand{\complexity}{\mathcal{O}}
+
+\newtcolorbox{note}[1][]{
+	colback=cyan!5!white,
+	colframe=cyan!75!black,
+	fonttitle=\bfseries,
+	#1
+}
+
 \newcommand{\problemlength}[1]{\abs{#1}}
 
 \newtheoremstyle{mainstyle}
@@ -88,5 +97,6 @@
 \newtheorem*{problem}{Задача}
 \newtheorem*{implication}{Следствие}
 \newtheorem*{algorithm}{Алгоритм}
+\newtheorem*{mathmodel}{Математическая модель}
 
 \crefname{fact}{утверждение}{утверждения}
