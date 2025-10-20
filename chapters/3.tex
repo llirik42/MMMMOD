@@ -1,0 +1,129 @@
+\chapter{Сетевые модели}
+
+\section{Теория графов}
+
+\definition
+
+\definitionfont{Граф} называется пара множество $G = (V, E)$, где $V$ --- \definitionfont{множество вершин}, $E \subseteq V \times V$ --- \definitionfont{множество рёбер}. 
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=1.5]
+		\node[vertex, label=above:$v_1$] (v1) at (0,0) {};
+		\node[vertex, label=left:$v_2$] (v2) at (-1,-1) {};
+		\node[vertex, label=right:$v_3$] (v3) at (-1,-3) {};
+		\node[vertex, label=above:$v_4$] (v4) at (0.5,-1.5) {};
+		\node[vertex, label=right:$v_5$] (v5) at (1.5,-2.5) {};
+	
+		\draw[edge] (v1) -- node[left] {$e_1$} (v2);
+		\draw[edge] (v2) -- node[left] {$e_3$} (v3);
+		\draw[edge] (v2) -- node[above] {$e_2$} (v4);
+		\draw[edge] (v4) -- node[above] {$e_4$} (v5);
+	\end{tikzpicture}
+	\caption{Пример графа}
+\end{figure}
+
+\definition
+
+Вершины называются \definitionfont{смежными}, если они соединены ребром.
+
+\definition
+
+\definitionfont{Ориентированным графом} называется пара множество $G = (V, E)$, где $V$ --- \definitionfont{множество вершин}, $E \subseteq V \times V$ --- \definitionfont{множество дуг}. Будем обозначать дугу от вершины $x$ до вершины $y$ как $\vec{xy}$.
+
+\remark
+
+В неориентированном графе если множество ребёр $E$ содержит ребро $(v_i, v_j)$, то оно также содержит ребро $(v_j, v_i)$. Сказать то же самое про дуги ориентированного графа нельзя.
+
+\remark
+
+В дальнейшем для простоты будем считать, что
+
+\begin{itemize}[nosep]
+	\item $V = \{1, 2, \dots, n\}$,
+	
+	\item $E = \{1, 2, \dots, m\}$.
+\end{itemize}
+
+\definition
+
+Пусть каждая дуга $j$ графа имеет некоторый вес $c(j)$, тогда \definitionfont{табличным видом графа} будем называть следующую таблицу
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c | } 
+		\hline
+		$j$ & $i(j)$ & $k(j)$ & $c(j)$ \\ \hline
+		$1$ &&& \\ \hline
+		$1$ &&& \\ \hline
+		$\dots$ &&&\\\hline
+		$m$ &&& \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{itemize}[nosep]
+	\item $j$ --- дуга,
+	
+	\item $i(j)$ --- начальная точка дуги,
+	
+	\item $k(j)$ --- конечная точка дуги,
+	
+	\item $c(j)$ --- вес дуги.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=1.5]
+		\node[vertex, label=above:$i(j)$] (i) at (-1,-1) {};
+		\node[vertex, label=left:$k(j)$] (k) at (1,1) {};
+		
+		\draw[->, edge] (i) -- node[left] {$j$} (k);
+	\end{tikzpicture}
+	\caption{Пример дуги $j$}
+\end{figure}
+
+\definition
+
+\definitionfont{Путь} в графе от вершины $i_1$ до $i_k$ --- последовательность неповторяющихся вершин. Будем обозначать это как $p(i_1, \dots, i_k)$ или $\{i_1, \dots, i_k\}$, где $(i_l, i_{l+1}) \in E$.
+
+\remark
+
+В рамках данного курса не будут рассматриваться циклы пути, являющиеся циклами, то есть всегда $i_1 \neq i_k$.
+
+\definition
+
+\definitionfont{Сеть} --- ориентированных граф $G = (V, E)$, в котором
+
+\begin{itemize}[nosep]
+	\item есть 2 выделенные вершины $s$ (источник/вход) и $t$ (сток/выход);
+	
+	\item на множестве вершин есть строгий порядок.
+\end{itemize}
+
+Вершины $s$ и $t$ определяется так: $s$ --- наименьшая вершина, в которую не входит дуга; а $t$ --- наибольшая вершина, из которой не выходит дуга.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=1.5]
+		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (s) at (-3,0) {};
+		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (t) at (1,0) {};
+		\node[vertex] (v1) at (-1.6, -0.2) {};
+		\node[vertex] (v2) at (-0.5, -0.6) {};
+		\node[vertex] (v3) at (-0.9, 0.5) {};
+		\node[vertex] (v4) at (-0.5, 1) {};
+		
+		\draw[->, edge] (s) -- node[left] {} (v1);
+		\draw[->, edge] (v1) -- node[left] {} (v2);
+		\draw[->, edge] (v1) -- node[left] {} (v3);
+		\draw[->, edge] (v3) -- node[left] {} (t);
+		\draw[->, edge] (v2) -- node[left] {} (t);
+		\draw[->, edge] (v3) -- node[left] {} (v4);
+		\draw[->, edge] (s) to[bend left=60] (t);
+		\draw[->, edge] (s) to[bend right=60] (t);
+	\end{tikzpicture}
+	\caption{Пример сети}
+\end{figure}
+
+\section{Сетевая модель проекта}
+
+\section{Алгоритм Форда}
