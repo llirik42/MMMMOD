@@ -200,7 +200,7 @@ f_{n+1}(p), f_{n+2}(p), \dots, f_{N}(p),
 \begin{itemize}[nosep]
 	\item На самом первом шаге имеем начальное состояние $p_0$, то есть $i=1$ и $p = p_0$.
 	
-	\item Пусть мы находимся на шаге $i$ и имеем состояние $p$, нужно выбрать некоторое решение $q \in Q_i(p)$, сменить состояние на $p' = T_i(p, q)$ и перейти к следующему шагу с номером $i+1$.
+	\item Пусть мы находимся на шаге $i$ и имеем состояние $p_i$, нужно выбрать некоторое решение $q \in Q_i(p)$, сменить состояние на $p_{i+1} = T_i(p, q)$ и перейти к следующему шагу с номером $i+1$.
 	
 	\item Если мы проделали $N$ шагов, то завершаем процесс.
 \end{itemize}
@@ -208,6 +208,38 @@ f_{n+1}(p), f_{n+2}(p), \dots, f_{N}(p),
 На каждом шаге мы выбирали некоторое решение $q \in Q_i(p)$, значит по итогам процесса у нас будет $N$ значений $q_1, q_2, \dots, q_N$, \underline{это и будет наша стратегия}.
 
 Однако нам бы не хотелось не просто допустимую, а оптимальную стратегию. Как понять, что стратегия оптимальна и как её получить?
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[arrow/.style={-{Stealth}}]
+		\draw[fill=blue!15, draw=blue, thick] (0,0) ellipse (0.8cm and 1.36cm);
+		\draw[fill=blue!15, draw=blue, thick] (4,0) ellipse (0.9cm and 1.53cm);
+		\draw[fill=blue!15, draw=blue, thick] (8,0) ellipse (1cm and 1.7cm);
+		\draw[fill=blue!15, draw=blue, thick] (12,0) ellipse (1.2cm and 2.04cm);
+		\draw[fill=blue!15, draw=blue, thick] (16,0) ellipse (0.6cm and 1.02cm);
+	
+		\node[above] at (0,1.46) {$P_1$};
+		\node[above] at (4,1.63) {$P_2$};
+		\node[above] at (8,1.8) {$P_3$};
+		\node[above] at (12,2.14) {$P_N$};
+		\node[above] at (16,1.12) {$P_{N+1}$};
+		
+		\node[above] at (10,0) {$\dots$};
+		
+		\filldraw (0, 0) circle (1.5pt) node[above] {$p_1=p_0$};
+		\filldraw (4, -0.4) circle (1.5pt) node[above] {$p_2$};
+		\filldraw (8, 0.3) circle (1.5pt) node[above] {$p_3$};
+		\filldraw (12, 0) circle (1.5pt) node[above] {$p_N$};
+		\filldraw (16, 0.1) circle (1.5pt) node[above] {$p_{N+1}$};
+
+		\draw[arrow] (0,0) to[out=0,in=180] (4,-0.4);
+		\draw[arrow] (4,-0.4) to[out=0,in=180] (8,0.3);
+		\draw[arrow] (8,0.3) to[out=0,in=180] (9.5,0.18);
+		\draw[arrow] (10.35,0.18) to[out=0,in=180] (12,0);
+		\draw[arrow] (12,0) to[out=0,in=180] (16,0.1);
+	\end{tikzpicture}
+	\caption{Иллюстрация переходов между состояниями}
+\end{figure}
 
 \section{Задача выбора оптимальной стратегии $N$-шагового процесса}
 
