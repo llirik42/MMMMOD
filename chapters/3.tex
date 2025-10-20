@@ -126,4 +126,131 @@
 
 \section{Сетевая модель проекта}
 
-\section{Алгоритм Форда}
+\definition
+
+\definitionfont{Модель проекта} определяется следующим образом:
+
+\begin{itemize}[nosep]
+	\item $J = \{1, \dots, n\}$ --- множество работ проекта,
+	
+	\item $\tau_{j} \ge 0$ --- длительность работы $j$;
+	
+	\item $C = \big\{(i, j) \; \big| \; i,j \in J\big\}$ --- частичный порядок, работа $j$ не может начаться раньше окончанию работы $i$.
+\end{itemize}
+
+Модель проекта можно записать с помощью следующей таблицы:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		$j$ & \text{следующие работы} & $\tau_j$ \\ \hline
+		$j_0$ & $j_1$, $j_2$, $\dots$ & $\tau_{j_0}$ \\ \hline
+		$\dots$ & $\dots$ & $\dots$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\example
+
+Рассмотрим следующую модель проекта:
+
+\begin{itemize}[nosep]
+	\item $\mathbf{J} = \{A, B, C, D, E, F, G, H, I, J\}$ --- множество работ проекта,
+	
+	\item $A$ --- выбрать место для офиса,
+	
+	\item $B$ --- создать финансовый и организационный план,
+	
+	\item $C$ --- определить обязанности персонала,
+	
+	\item $D$ --- разработать план офиса,
+	
+	\item $E$ --- ремонт помещений,
+	
+	\item $F$ --- отобрать кандидатов на увольнение,
+	
+	\item $G$ --- нанять новых служащих,
+	
+	\item $H$ --- назначить ключевых руководителей,
+	
+	\item $I$ --- распределить обязанности руководителей,
+	
+	\item $J$ --- обучить персонал;
+\end{itemize}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		$j$ & \text{следующие работы} & $\tau_j$ \\ \hline
+		$A$ & $\{D\}$ & $3$ \\ \hline
+		$B$ & $\{C, I\}$ & $5$ \\ \hline
+		$C$ & $\{D, F\}$ & $3$ \\ \hline
+		$D$ & $\{E\}$ & $5$ \\ \hline
+		$E$ & $\{J\}$ & $10$ \\ \hline
+		$F$ & $\{G, H\}$ & $2$ \\ \hline
+		$G$ & $\{J\}$ & $5$ \\ \hline
+		$H$ & $\{J\}$ & $2$ \\ \hline
+		$I$ & $\{\}$ & $5$ \\ \hline
+		$J$ & $\{\}$ & $3$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\definition
+
+\definitionfont{Сетевая модель проекта} --- наглядное представление работ в виде сети, в которой для каждой работы есть дуга, а отношение следования работ в проекте имеет место и в сети.
+
+\definitionfont{Сетевая модель проекта} --- ориентированный взвешенный граф без циклов $G = (V, E)$ с выделенными вершинами $s$ и $t$, при этом каждой дуге $j = (i, k)$ приписан вес $\tau_j \ge 0$. Вершинами сети будут \definitionfont{события} (результаты выполнения работ), а дугами сами работы.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=1.5]
+		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (s) at (-3,0) {};
+		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (t) at (2,-1) {};
+		\node[vertex] (sa) at (-2.3,0.7) {};
+		\node[vertex] (sb) at (-2.3,-0.7) {};
+		\node[vertex] (ad) at (-0.8,0.7) {};
+		\node[vertex] (de) at (0.7,0.7) {};
+		\node[vertex] (bci) at (-0.8,-0.7) {};
+		\node[vertex] (fgh) at (0.7,-0.7) {};
+		
+		\node at (0.4,0) {$G$};
+		\node at (1,0) {$H$};
+		\node at (1.7, -0.1) {$J$};
+		\node at (-1, -1.2) {$I$};
+		\draw[->, edge] (s) -- node[above left] {$A$} (sa);
+		\draw[->, edge] (s) -- node[below left] {$B$} (sb);
+		\draw[->, edge] (sa) -- node[above] {$D$} (ad);
+		\draw[->, edge] (ad) -- node[above] {$E$} (de);
+		\draw[->, edge] (fgh) to[bend left=20] (de);
+		\draw[->, edge] (fgh) to[bend right=20] (de);
+		\draw[->, edge] (sb) -- node[above] {$C$} (bci);
+		\draw[->, edge] (bci) -- node[above] {$F$} (fgh);
+		\draw[->, edge, dashed] (bci) -- node[above] {} (sa);
+		\draw[->, edge] (sb) to[bend right=10] (t);
+		\draw[->, edge] (de) to[bend left=10] (t);
+	\end{tikzpicture}
+	\caption{Сеть для проекта из примера}
+\end{figure}
+
+\algorithm[построения сетевой модели]
+
+\begin{enumerate}[nosep]
+	\item[]
+	
+	\item Для каждой работы строим вершины и дуги.
+	
+	\item Рисуем фиктивные дуги из конца текущей работы в следующую.
+	
+	\item Ставим начальную и конечную вершины $s$ и $t$.
+	
+	\item убираем лишние фиктивные дуги, если она единственная, которая входит или выходит и если она не создаёт параллельные соединения.
+\end{enumerate}
+
+Нумерация вершин верна тогда и только тогда, когда номер предыдущей вершины меньше номера следующей. Чтобы правильно пронумеровать вершины, можно использовать алгоритм Форда
+
+\definition
+
+\definitionfont{Рангом} $r(x)$ вершины $x \in V$ называется число дуг в максимальном пути (по числу дуг) из источника $s$ в вершину $x$. \definitionfont{Рангом проекта} $R$ называется $r(t)$ (ранг стока).
+
+\algorithm[Форда]
