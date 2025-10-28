@@ -98,7 +98,7 @@
 
 \definition
 
-\definitionfont{Путь} в графе от вершины $i_1$ до $i_k$ --- последовательность неповторяющихся вершин. Будем обозначать это как $p(i_1, \dots, i_k)$ или $\{i_1, \dots, i_k\}$, где $(i_l, i_{l+1}) \in E$.
+\definitionfont{Путь} в графе от вершины $i_1$ до $i_{L+1}$ --- последовательность неповторяющихся вершин. Будем обозначать это как $P(i_1, \dots, i_{L+1})$ или $\{i_1, \dots, i_{L+1}\}$, где $(i_l, i_{l+1}) \in E$.
 
 \remark
 
@@ -106,7 +106,7 @@
 
 \definition
 
-\definitionfont{Сеть} --- ориентированных граф $G = (V, E)$, в котором
+\definitionfont{Сеть} --- ориентированных граф $G = (I, J)$, в котором
 
 \begin{itemize}[nosep]
 	\item есть 2 выделенные вершины $s$ (источник/вход) и $t$ (сток/выход);
@@ -137,6 +137,22 @@
 	\end{tikzpicture}
 	\caption{Пример сети}
 \end{figure}
+
+\begin{definition}
+	Сеть называется \definitionfont{взвешенной}, если у каждой дуги $j$ есть некоторой вес $\tau_j$. Тогда такую сеть можно задать с помощью следующей таблицы
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c |} 
+			\hline
+			$j$ & $i(j)$ & $k(j)$ & $c(j)$ & $\tau_j$ \\ \hline
+			$1$ &&&& \\ \hline
+			$1$ &&&& \\ \hline
+			$\dots$ &&&& \\\hline
+			$m$ &&&& \\ \hline
+		\end{tabular}
+	\end{table}
+\end{definition}
 
 \section{Сетевая модель проекта}
 
@@ -171,7 +187,7 @@
 Рассмотрим следующую модель проекта:
 
 \begin{itemize}[nosep]
-	\item $\mathbf{J} = \{1, 2, \dots, 9, 10\}$ --- множество работ проекта,
+	\item $J = \{1, 2, \dots, 9, 10\}$ --- множество работ проекта,
 	
 	\item $1$ --- выбрать место для офиса,
 	
@@ -326,3 +342,381 @@
 \fact
 
 Алгоритм Форда создаёт корректную нумерацию вершин в сети.
+
+\section{Поиск максимальных путей}
+
+\definition
+
+Длиной пути $P(i_1, \dots, i_{L+1})$ в некоторой сети будем называть
+\[
+\abs{P(i_1, \dots, i_{L+1})} = \sum_{l=1}^{L} \tau_{(i_l, i_{l+1})}
+\]
+
+\remark
+
+Вместо суммы может стоять произведение, взятие максимума/минимума и так далее (всё зависит от конкретной задачи и сети).
+
+\algorithm[поиска максимальных путей]
+
+Пусть есть некоторой сеть $G = (I, J)$ и стоит задача: найти все пути максимальных длины от первой до последней вершины ($1 \to n$).
+
+Задача состоит в том, чтобы идти от $1$-ой вершины к вершине $n$ по всем возможным путям, а затем выбрать все пути с наибольшей длиной.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2]
+		\node[vertex, fill=blue] (1) at (-3,0) {};
+		\node[vertex, fill=blue] (11) at (2.2,0) {};
+		\node[vertex] (2) at (-2, 0) {};
+		\node[vertex, label=right:$\dots$] (3) at (-1.6, 0.6) {};
+		\node[vertex, label=right:$\dots$] (4) at (-1.6, -0.6) {};
+		\node[vertex] (5) at (-1, 0) {};
+		\node[vertex, label=right:$\dots$] (6) at (-0.6, 0.6) {};
+		\node[vertex] (7) at (-0.6, -0.6) {};
+		\node[vertex] (8) at (0, 0) {};
+		\node[vertex, label=right:$\dots$] (9) at (0.6, 0) {};
+		\node[vertex, label=left:$\dots$] (10) at (1.6, 0) {};
+		\draw[->, edge] (1) -- node[left] {} (2);
+		\draw[->, edge] (2) -- node[left] {} (3);
+		\draw[->, edge] (2) -- node[left] {} (4);
+		\draw[->, edge] (2) -- node[left] {} (5);
+		\draw[->, edge] (5) -- node[left] {} (6);
+		\draw[->, edge] (5) -- node[left] {} (7);
+		\draw[->, edge] (7) -- node[left] {} (8);
+		\draw[->, edge] (8) -- node[left] {} (9);
+		\draw[->, edge] (10) -- node[left] {} (11);
+		\draw[->, edge] (1) to[bend left=60] (11);
+		\draw[->, edge] (1) to[bend right=60] (11);
+	\end{tikzpicture}
+\end{figure}
+
+Для этого будем использовать динамическое программирование. Поскольку нам не задано количество шагов (длины путей зависят от конкретной сети), то будем использовать \hyperref[alg:unknown_step_process]{многошаговый процесс принятия решений}. Вспомним, что по определению сети на множестве вершин определён строгий частичный порядок, что соответствует требования многошагового процесса (<<согласованность>> функции перехода).
+
+\textbf{Выбор оптимальной стратегии}
+
+Формализуем задачу поиска максимальных путей в терминах динамического программирования:
+
+\begin{itemize}[nosep]
+	\item \underline{состояние} на каждом шаге --- $i \in I$, то есть текущая вершина;
+	
+	\item \underline{решение} --- $j \in J$, то есть дуга, по которой мы пойдём;
+	
+	\item \underline{множество возможных состояний} --- $P = I$;
+	
+	\item \underline{множество конечных состояний} --- $\bar{P} = \{n\}$;
+	
+	\item \underline{начальное состояние} --- $p_0 = 1$;
+	
+	\item \underline{множество возможных решений} --- $Q = J$;
+	
+	\item \underline{множество допустимых решений}
+	\[
+	Q(i) = \{j \; \bigg| \; i(j) = i\}
+	\]
+	
+	то есть это множество всех дуг, по которым можно пойти из вершины $i$;
+	
+	\item \underline{функция перехода} --- $T(i, j) = k(j)$, то есть мы находимся в вершине $i$ и двигаемся по дуге $j$;
+	
+	\item \underline{функция дохода} --- $g(i, j) = \tau_j$.
+\end{itemize}
+
+\textbf{База процесса}
+
+Пусть $f(i)$ --- длина максимального пути из вершины $i$ в вершину $n$. По \hyperref[alg:unknown_step_process]{теории} $f(n) = 0$.
+
+\textbf{Переход}
+
+Пусть мы находимся в вершине $i$, тогда нам нужно рассмотреть все дуги, начинающиеся в данной вершине.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2]
+		\node[vertex, label=left:$i$] (1) at (-3,0) {};
+		\node[vertex] (2) at (-2.5,0) {};
+		\node[vertex] (3) at (-2.6,0.4) {};
+		\node[vertex] (4) at (-2.6,-0.4) {};
+		
+		\draw[->, edge] (1) -- node[left] {} (2);
+		\draw[->, edge] (1) -- node[left] {} (3);
+		\draw[->, edge] (1) -- node[left] {} (4);
+	\end{tikzpicture}
+\end{figure}
+
+Таким образом,
+\[
+f(i) = \max_{j: \; i(j) = i} \Big\{\tau_j + f\big(k(j)\big)\Big\}.
+\]
+
+Так как $k(j) > 1$, то значение $f\big(k(j)\big)$ нам известно.
+
+\textbf{Выбор стратегии}
+
+Будем всё записывать в следующую таблицу
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c |} 
+		\hline
+		$i$ & $f(i)$ & $j(i)$\\ 
+		\hline
+		$1$ &&\\\hline
+		$2$ && \\\hline
+		$\dots$ && \\\hline
+		$n-1$ && \\\hline
+		$n$ && \\\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2]
+		\node[vertex, fill=blue, label=left:{$i=1$}] (1) at (-3,0) {};
+		\node[vertex, fill=blue, label=right:{$i=n$}] (11) at (2.2,0) {};
+		\node[vertex] (2) at (-2, 0) {};
+		\node[vertex, label=right:$\dots$] (3) at (-1.6, 0.6) {};
+		\node[vertex, label=right:$\dots$] (4) at (-1.6, -0.6) {};
+		\node[vertex] (5) at (-1, 0) {};
+		\node[vertex, label=right:$\dots$] (6) at (-0.6, 0.6) {};
+		\node[vertex] (7) at (-0.6, -0.6) {};
+		\node[vertex] (8) at (0, 0) {};
+		\node[vertex, label=right:$\dots$] (9) at (0.6, 0) {};
+		\node[vertex, label=left:$\dots$] (10) at (1.6, 0) {};
+		\draw[->, edge, thick, red] (1) -- node[above] {$j(1)$} (2);
+		\draw[->, edge] (2) -- node[left] {} (3);
+		\draw[->, edge] (2) -- node[left] {} (4);
+		\draw[->, edge, thick, red] (2) -- node[above] {$j(2)$} (5);
+		\draw[->, edge] (5) -- node[left] {} (6);
+		\draw[->, edge, thick, red] (5) -- node[left] {$j(3)$} (7);
+		\draw[->, edge, thick, red] (7) -- node[below right] {$j(4)$} (8);
+		\draw[->, edge, thick, red] (8) -- node[above]{$j(5)$} (9);
+		\draw[->, edge, thick, red] (10) -- node[above] {$j(n-1)$} (11);
+		\draw[->, edge] (1) to[bend left=60] (11);
+		\draw[->, edge] (1) to[bend right=60] (11);
+	\end{tikzpicture}
+	\caption{Пример оптимальной стратегии}
+\end{figure}
+
+\remark
+
+По ходу процесса, мы узнаем длины наибольших путей из каждой вершины в $n$-ую. Однако на будущее хотелось бы знать про максимальные пути из $1$-ой вершины в любую.
+
+\algorithm[пути из $1$-ой вершины]
+
+Для нахождения максимальных путей из $1$-ой вершины в любую другую проделаем тот же самый процесс, но будем идти не $1 \to n$, а $n \to 1$.
+
+\textbf{База процесса}
+
+Пусть $g(i)$ --- длина максимального пути из вершины $i$ в вершину $1$. По \hyperref[alg:unknown_step_process]{теории} $g(1) = 0$.
+
+\textbf{Переход}
+
+Запишем рекуррентное соотношение аналогично (чему?)
+
+\[
+g(i) = \max_{j': \; k(j') = i} \Big\{\tau_{j'} + g\big(i(j')\big)\Big\}.
+\]
+
+Вспомним, что $i(j') < i$, поэтому каждый раз мы будем переходить в вершину с меньшим номером, значит $g\big(i(j')\big)$ нам будет уже известно.
+
+Итого, у нас будет таблица
+
+Будем всё записывать в следующую таблицу
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c | c| } 
+		\hline
+		$i$ & $f(i)$ & $j(i)$ & $g(i)$ & $j'(i)$ \\ 
+		\hline
+		$1$ &&&&\\\hline
+		$2$ &&&& \\\hline
+		$\dots$ &&&& \\\hline
+		$n-1$ &&&& \\\hline
+		$n$ &&&& \\\hline
+	\end{tabular}
+\end{table}
+
+Ясно, что $f(1) = g(n)$.
+
+\remark
+
+Пусть исходная сеть соответствовала некоторому проекту с набором работ $J$ и продолжительностями работ $\{\tau_j\}$. Проект будет реализован, если будут реализованы самые длинны пути $1 \to n$.
+
+\definition
+
+Длину максимального пути из первой вершины в $i$-ую будем обозначать $T_i^{\text{р}}$. В рамках проекта, это означает самое ранее время наступления события $i$.
+
+\definition
+
+\definitionfont{Критическим временем проекта} будет называть $T = T_n^{\text{р}} = g(n) = f(1)$.
+
+\definition
+
+Путь будем называть \definitionfont{критическим}, если его длина равняется $T$.
+
+\definition
+
+Работу будем называться \definitionfont{критической}, если дуга, соответствующая этой работе, входит в состав критического пути.
+
+\remark
+
+Если увеличить время критической работы, то время проекта увеличится.
+
+\definition
+
+\definitionfont{Наиболее поздним временем наступления события $i$} будем называть $T_i^{\text{П}} = T - f(i)$.
+
+\remark
+
+Мы уже говорили, что если работа критическая, то увеличивать её время нежелательно, так как увеличится время всего проекта. А если работа не критическая, то можно увеличить её время? И если можно, то насколько? Обозначим увеличение времени работы как $\delta_j$.
+
+\fact
+
+Максимальное значение $\Delta_j$, которое не приведёт к увеличению времени проекта вычисляется по формуле
+\[
+\Delta_j = T_{k(j)}^{\text{П}} - T_{i(j)}^{\text{р}} - \tau_j.
+\]
+
+\prooof
+
+Заметим, что
+\[
+g\big(i(j)\big) + \tau_j + f\big(k(j)\big) \le T.
+\]
+
+Значит, к левой части можно добавить $\Delta_j$ так, чтобы левая часть не превысила $T$. А максимальное значение $\Delta_j$, которое можно добавить, это значение, при котором будет достигаться равенство, то есть
+
+\[
+g\big(i(j)\big) + \tau_j + \Delta_j + f\big(k(j)\big) = T,
+\]
+\[
+\Updownarrow
+\]
+\begin{align*}
+	\Delta_j =& \; T - 	f\big(k(j)\big) - g\big(i(j)\big) - \tau_j \\
+	=& \; T_{k(j)}^{\text{П}} - T_{i(j)}^{\text{р}} - \tau_j.
+\end{align*}
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2]
+		\node[vertex, fill=blue, label=left:{$i=1$}] (1) at (-3,0) {};
+		\node[vertex] (2) at (-2.55,0.45) {};
+		\node[vertex, label=left:{$\dots$}] (3) at (-2.45,0.55) {};
+		\node[vertex, label=above:{$i(j)$}] (4) at (-2,1) {};
+		\node[vertex, label=above:{$k(j)$}] (5) at (0,1) {};
+		\node[vertex, label=right:{$\dots$}] (6) at (0.45,0.55) {};
+		\node[vertex] (7) at (0.55,0.45) {};
+		\node[vertex, fill=blue, label=right:{$i=n$}] (8) at (1,0) {};
+		\node at (-1,1.3) {$\tau_j + \Delta_j$};
+		\draw[->, edge] (1) to[bend left=15] (2);
+		\draw[->, edge] (3) to[bend left=15] (4);
+		\draw[->, edge] (4) to[bend left=15] (5);
+		\draw[->, edge] (5) to[bend left=15] (6);
+		\draw[->, edge] (7) to[bend left=15] (8);
+		\draw [<->] (-3.5, 0.5) -- node[above left = -1mm] {$g\big(i(j)\big)$} (-2.5, 1.5);
+		
+		\draw [<->] (1.5, 0.5) -- node[above right = -1mm] {$f\big(k(j)\big)$} (0.5, 1.5);
+	\end{tikzpicture}
+\end{figure}
+
+\implication
+
+\begin{itemize}[nosep]
+	\item[]
+	
+	\item Если $\Delta_j > T_{k(j)}^{\text{П}} - T_{i(j)}^{\text{р}} - \tau_j$, то время проекта увеличится;
+	
+	\item Если $\Delta_j < \dots$, то время проекта не изменится.
+\end{itemize}
+
+\section{Задача о максимальном потоке}
+
+\definition
+
+Пусть
+\begin{itemize}[nosep]
+	\item $G = (I, J)$ --- взвешенная сеть;
+	
+	\item $i = 1$ --- вход, $i = n$ --- выход;
+	
+	\item $b_{ik}$ --- вес дуги $\vec{ik}$;
+\end{itemize}
+
+тогда $x = (x_{ik})$ будем называть \definitionfont{потоком в сети} с величиной входного потока $v$, если выполняется следующие ограничения
+\[
+\forall l \in I \quad \sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il} = \begin{cases}
+	v, & l = 1, \\
+	0, & l = 2 \dots n-1, \\
+	-v, & l = n;
+\end{cases}
+\]
+
+(закон сохранения энергии)
+
+\[
+\forall j = (i, k) \quad x_{ik} \le b_{ik}.
+\]
+
+\definition
+
+\definitionfont{Величину потока $x$ в сети} будем обозначать $v(x)$.
+
+\definition
+
+Пару $(S, \bar{S})$ будем называть \definitionfont{разрезом сети}, если $S$ и $\bar{S}$ разбивают множество вершин сети, при этом обязательно $1 \in S$, $n \in \bar{S}$.
+
+\definition
+
+\definitionfont{Пропускной способностью разреза} будем называть
+\[
+B(S, \bar{S}) = \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} b_{ik}
+\]
+
+По сути, это сумма пропускным способностей всех дуг, идущих из $S$ в $\bar{S}$.
+
+\fact[свойство разреза]
+
+Какой бы ни был поток $x = (x_{ik})$ и разрез $(S, \bar{S})$
+\[
+v(x) \le B(S, \bar{S}).
+\]
+
+\prooof
+
+Напишем следующие выражение
+\[
+Z = \sum_{l \in S} \bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg).
+\]
+
+Вспомним, что по определению разреза $1 \in S$, а значит $Z = v + \dots$. Также вспомним определение потока и условия оттуда, из них следует, что внутреннее выражение для всех $l \neq 1$ равняется $0$. Из всего этого следует, что
+\[
+Z = \underbrace{0}_{v = 1} + \underbrace{0 + \dots + 0}_{1 \neq l \in S} = v
+\]
+
+Посмотрим на $Z$ с другой стороны. Рассмотрим возможные случаи взаимного расположения вершин $i$ и $k$ для вершины $l$
+
+\begin{itemize}[nosep]
+	\item $i \in S, k \in S$;
+	
+	\item $i \in S, k \in \bar{S}$;
+	
+	\item $k \in S, k \in S$.
+\end{itemize}
+
+\begin{align*}
+	Z =& \; \sum_{l \in S} \bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg) \\
+	=& \;  \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} - \sum_{\underset{i \in \bar{S}, k \in S}{(i, k) \in J}} x_{ik} \\
+	\le& \; \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} \\
+	\le& \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} b_{ik} \\
+	=& \; B(S, \bar{S}).
+\end{align*}
+
+Для перехода $\sum_{\dots}x_{ik} \le \sum_{\dots} b_{ik}$ использовалось условие из определения потока в сети.
+
+Таким образом $Z = v$ и $Z \le B(S, \bar{S})$, значит $v \le B(S, \bar{S})$.
+
+TODO: есть путаница, где-то просто $v$, а где-то $v(x)$.
+
+\fact[критерий максимальности потока]
