@@ -282,7 +282,7 @@
 
 \definitionfont{Рангом} $r(x)$ вершины $x \in V$ называется число дуг в максимальном (по числу дуг) пути из начальной вершины $s$ в вершину $x$. \definitionfont{Рангом проекта} называется $r(t)$ (ранг стока/выхода/конечной вершины).
 
-\algorithm[Форда]
+\algorithm[Форда]\label{alg:ford}
 
 Алгоритм позволяет устанавливать ранги в сети так, чтобы нумерация вершин оказалось корректной с точки зрения условия $i(j) < k(j)$.
 
@@ -326,3 +326,543 @@
 \fact
 
 Алгоритм Форда создаёт корректную нумерацию вершин в сети.
+
+\bigskip
+
+\section{Практика построения сетей и нумерации вершин}
+
+\subsection{Проект постройки дома}
+
+\problem[Проект постройки дома]
+
+Имеется проект постройки дома состоящий из восьми работ:
+
+\bigskip
+
+\begin{enumerate}[nosep]
+	\item Очистка участка
+	\item Земляные работы под фундамент
+	\item Прокладка наружных коммуникаций
+	\item Заливка фундамента и возведение стен
+	\item Устройство крыши
+	\item Прокладка внутренних коммуникаций
+	\item Внутренние отделочные работы
+	\item Обустройство территории
+\end{enumerate}
+
+\bigskip
+
+Необходимо построить сетевую модель проекта и пронумеровать его вершины.
+
+\bigskip
+
+\textbf{Таблица работ}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | } 
+		\hline
+		j & следующие работы \\\hline
+		$1$ & $\{2,3\}$ \\\hline
+		$2$ & $\{4\}$ \\\hline
+		$3$ & $\{8,6\}$ \\\hline
+		$4$ & $\{5,6\}$ \\\hline
+		$5$ & $\O$ \\\hline
+		$6$ & $\{7\}$ \\\hline
+		$7$ & $\O$ \\\hline
+		$8$ & $\O$ \\\hline
+	\end{tabular}
+\end{table}
+
+\bigskip
+
+\textbf{Построение сетевой модели}
+
+\fbox{Шаг 1} $\,$ Построение вершин и дуг для каждой работы
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex] (1) at (-3,0) {};
+		\node[vertex] (2) at (-2,0) {};
+		\node[vertex] (3) at (-3,-1) {};
+		\node[vertex] (4) at (-2,-1) {};
+		\node[vertex] (5) at (-1,0) {};
+		\node[vertex] (6) at (0,0) {};
+		\node[vertex] (7) at (-2,-2) {};
+		\node[vertex] (8) at (-1, -2) {};
+		\node[vertex] (9) at (0,-2) {};
+		\node[vertex] (10) at (1, -2) {};
+		\node[vertex] (11) at (0,-1) {};
+		\node[vertex] (12) at (1, -1) {};
+		\node[vertex] (13) at (2,-1) {};
+		\node[vertex] (14) at (3, -1) {};
+		\node[vertex] (15) at (1,0) {};
+		\node[vertex] (16) at (2,0) {};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+		
+	\end{tikzpicture}
+\end{figure}
+
+\fbox{Шаг 2} $\,$ Обозначение подчиненностей, добавление начальной и конечной вершин
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
+		\node[vertex] (2) at (-3,0) {};
+		\node[vertex] (3) at (-3,-1) {};
+		\node[vertex] (4) at (-2,-1) {};
+		\node[vertex] (5) at (-1,0) {};
+		\node[vertex] (6) at (0,0) {};
+		\node[vertex] (7) at (-2,-2) {};
+		\node[vertex] (8) at (-1, -2) {};
+		\node[vertex] (9) at (0,-2) {};
+		\node[vertex] (10) at (1, -2) {};
+		\node[vertex] (11) at (0,-1) {};
+		\node[vertex] (12) at (1, -1) {};
+		\node[vertex] (13) at (2,-1) {};
+		\node[vertex] (14) at (3, -1) {};
+		\node[vertex] (15) at (1,0) {};
+		\node[vertex] (16) at (2,0) {};
+		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (17) at (3.5,-1) {};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+		
+		\draw[->, edge, dashed] (2) -- node {} (3);
+		\draw[->, edge, dashed] (2) -- node {} (5);
+		\draw[->, edge, dashed] (4) -- node {} (7);
+		\draw[->, edge, dashed] (8) -- node {} (9);
+		\draw[->, edge, dashed] (6) -- node {} (11);
+		\draw[->, edge, dashed] (6) -- node {} (15);
+		\draw[->, edge, dashed] (12) -- node {} (13);
+		\draw[->, edge, dashed] (8) -- node {} (11);
+		\draw[->, edge, dashed] (10) -- node {} (17);
+		\draw[->, edge, dashed] (14) -- node {} (17);
+		\draw[->, edge, dashed] (16) -- node {} (17);
+		
+	\end{tikzpicture}
+\end{figure}
+
+\fbox{Шаг 3} $\,$ Убираем фиктивные дуги
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
+		\node[vertex] (2) at (-3,0) {};
+		\node[vertex] (3) at (-2,-1) {};
+		\node[vertex] (4) at (0,0) {};
+		\node[vertex] (5) at (-1, -2) {};
+		\node[vertex] (6) at (0,-1) {};
+		\node[vertex] (7) at (2,-1) {};
+		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (8) at (3.5,-1) {};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (2) -- node {} (3);
+		\draw[->, edge] (3) -- node {} (5);
+		\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
+		\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
+		\draw[->, edge] (7) -- node {} (8);
+		\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
+		\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
+		
+		\draw[->, edge, dashed] (4) -- node {} (6);
+		\draw[->, edge, dashed] (5) -- node {} (6);
+		
+		\node at (2.2, -0.8) {\squared{7}};
+		\node at (-2.25, -0.5) {\squared{2}};
+		\node at (-1.5, -1.25) {\squared{4}};
+		
+	\end{tikzpicture}
+\end{figure}
+
+\fbox{Шаг 4} $\,$ Нумерация вершин
+
+Пронумеруем вершины, стараясь сделать так, чтобы $i(j) < k(j)$
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label={\circled{1}}, fill=blue] (1) at (-4,0) {};
+		\node[vertex, label={\circled{2}}] (2) at (-3,0) {};
+		\node[vertex, label={\circled{6}}] (3) at (-2,-1) {};
+		\node[vertex, label={\circled{5}}] (4) at (0,0) {};
+		\node[vertex, label={\circled{4}}] (5) at (-1, -2) {};
+		\node[vertex, label=above right:\circled{3}] (6) at (0,-1) {};
+		\node[vertex, label=\circled{8}] (7) at (2,-1) {};
+		\node[vertex, label={\circled{7}}, fill=blue, fill=blue] (8) at (3.5,-1) {};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (2) -- node {} (3);
+		\draw[->, edge] (3) -- node {} (5);
+		\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
+		\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
+		\draw[->, edge] (7) -- node {} (8);
+		\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
+		\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
+		
+		\draw[->, edge, dashed] (4) -- node {} (6);
+		\draw[->, edge, dashed] (5) -- node {} (6);
+		
+		\node at (2.4, -0.85) {\squared{7}};
+		\node at (-2.35, -0.4) {\squared{2}};
+		\node at (-1.5, -1.25) {\squared{4}};
+		\node at (0.2, -0.4) {\squared{10}};
+		\node at (-0.6, -1.3) {\squared{9}};
+		
+	\end{tikzpicture}
+\end{figure}
+
+Составляем табличный вид данного графа:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		$j$ & $i(j)$ & $k(j)$ \\ \hline
+		
+		$1$ & $1$ & $2$ \\ \hline
+		$2$ & $2$ & $6$ \\ \hline
+		$3$ & $2$ & $5$ \\ \hline
+		$4$ & $6$ & $4$ \\ \hline
+		$5$ & $4$ & $7$ \\ \hline
+		$6$ & $3$ & $8$ \\ \hline
+		$7$ & $8$ & $7$ \\ \hline
+		$8$ & $5$ & $7$ \\ \hline
+		$9$ & $4$ & $3$ \\ \hline
+		$10$ & $5$ & $3$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Как видно для $j = \{4, 7, 9, 10\}$ не удалось корректно пронумеровать вершины. Воспользуемся \hyperref[alg:ford]{алгоритмом Форда} чтобы определить ранги вершин и корректно их пронумеровать.
+
+Будем шаг за шагом заполнять таблицу, для итерации 0: все $r_k^0 = 0$
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | } 
+		\hline
+		$k$ & $r_k^0$ \\ \hline
+		$1$ & $0$ \\ \hline
+		$2$ & $0$ \\ \hline
+		$3$ & $0$ \\ \hline
+		$4$ & $0$ \\ \hline
+		$5$ & $0$ \\ \hline
+		$6$ & $0$ \\ \hline
+		$7$ & $0$ \\ \hline
+		$8$ & $0$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\fbox{Итерация 1}
+
+\bigskip
+
+Следуя алгоритму вычисляем $r^1_k$ используя табличный вид графа:
+
+\begin{enumerate}[nosep]
+	\item $r_2^1 = max\{r_2^1, r_1^1 + 1\} = max\{0,0+1\} = 1$
+	\item $r_6^1 = max\{r_6^1, r_2^1 + 1\} = max\{0,1+1\} = 2$
+	\item $r_5^1 = max\{r_5^1, r_2^1 + 1\} = max\{0,1+1\} = 2$
+	\item $r_4^1 = max\{r_4^1, r_6^1 + 1\} = max\{0,2+1\} = 3$
+	\item $r_7^1 = max\{r_7^1, r_4^1 + 1\} = max\{0,3+1\} = 4$
+	\item $r_8^1 = max\{r_8^1, r_3^1 + 1\} = max\{0,0+1\} = 1$
+	\item $r_7^1 = max\{r_7^1, r_8^1 + 1\} = max\{4,1+1\} = 4$
+	\item $r_7^1 = max\{r_7^1, r_5^1 + 1\} = max\{4,2+1\} = 4$
+	\item $r_3^1 = max\{r_3^1, r_4^1 + 1\} = max\{0,3+1\} = 4$
+	\item $r_3^1 = max\{r_3^1, r_5^1 + 1\} = max\{4,2+1\} = 4$
+\end{enumerate}
+
+Заносим результаты в таблицу:
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		$k$ & $r_k^0$ & $r_k^1$ \\ \hline
+		$1$ & $0$ & $0$ \\ \hline
+		$2$ & $0$ & $1$ \\ \hline
+		$3$ & $0$ & $4$ \\ \hline
+		$4$ & $0$ & $3$ \\ \hline
+		$5$ & $0$ & $2$ \\ \hline
+		$6$ & $0$ & $2$ \\ \hline
+		$7$ & $0$ & $4$ \\ \hline
+		$8$ & $0$ & $1$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\bigskip
+
+\fbox{Итерация 2}
+
+\bigskip
+
+Следуя алгоритму вычисляем $r^2_k$ используя табличный вид графа:
+
+\begin{enumerate}[nosep]
+	\item $r_2^2 = max\{r_2^2, r_1^2 + 1\} = max\{0,0+1\} = 1$
+	\item $r_6^2 = max\{r_6^2, r_2^2 + 1\} = max\{2,1+1\} = 2$
+	\item $r_5^2 = max\{r_5^2, r_2^2 + 1\} = max\{2,1+1\} = 2$
+	\item $r_4^2 = max\{r_4^2, r_6^2 + 1\} = max\{3,2+1\} = 3$
+	\item $r_7^2 = max\{r_7^2, r_4^2 + 1\} = max\{4,3+1\} = 4$
+	\item $r_8^2 = max\{r_8^2, r_3^2 + 1\} = max\{1,4+1\} = 5$
+	\item $r_7^2 = max\{r_7^2, r_8^2 + 1\} = max\{4,5+1\} = 6$
+	\item $r_7^2 = max\{r_7^2, r_5^2 + 1\} = max\{6,3+1\} = 6$
+	\item $r_3^2 = max\{r_3^2, r_4^2 + 1\} = max\{4,3+1\} = 4$
+	\item $r_3^2 = max\{r_3^2, r_5^2 + 1\} = max\{4,2+1\} = 4$
+\end{enumerate}
+
+Заносим результаты в таблицу:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c |} 
+		\hline
+		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ \\ \hline
+		$1$ & $0$ & $0$ & $0$ \\ \hline
+		$2$ & $0$ & $1$ & $1$ \\ \hline
+		$3$ & $0$ & $4$ & $4$ \\ \hline
+		$4$ & $0$ & $3$ & $3$ \\ \hline
+		$5$ & $0$ & $2$ & $2$ \\ \hline
+		$6$ & $0$ & $2$ & $2$ \\ \hline
+		$7$ & $0$ & $4$ & $6$ \\ \hline
+		$8$ & $0$ & $1$ & $5$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\fbox{Итерация 3}
+
+\bigskip
+
+Следуя алгоритму вычисляем $r^3_k$ используя табличный вид графа:
+
+\begin{enumerate}[nosep]
+	\item $r_2^3 = max\{r_2^3, r_1^3 + 1\} = max\{0,0+1\} = 1$
+	\item $r_6^3 = max\{r_6^3, r_2^3 + 1\} = max\{2,1+1\} = 2$
+	\item $r_5^3 = max\{r_5^3, r_2^3 + 1\} = max\{2,1+1\} = 2$
+	\item $r_4^3 = max\{r_4^3, r_6^3 + 1\} = max\{3,2+1\} = 3$
+	\item $r_7^3 = max\{r_7^3, r_4^3 + 1\} = max\{6,3+1\} = 6$
+	\item $r_8^3 = max\{r_8^3, r_3^3 + 1\} = max\{5,4+1\} = 5$
+	\item $r_7^3 = max\{r_7^3, r_8^3 + 1\} = max\{6,5+1\} = 6$
+	\item $r_7^3 = max\{r_7^3, r_5^3 + 1\} = max\{6,2+1\} = 6$
+	\item $r_3^3 = max\{r_3^3, r_4^3 + 1\} = max\{4,3+1\} = 4$
+	\item $r_3^3 = max\{r_3^3, r_5^3 + 1\} = max\{4,2+1\} = 4$
+\end{enumerate}
+
+Заносим результаты в таблицу:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c | c | } 
+		\hline
+		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ \\ \hline
+		$1$ & $0$ & $0$ & $0$ & $0$ \\ \hline
+		$2$ & $0$ & $1$ & $1$ & $1$ \\ \hline
+		$3$ & $0$ & $4$ & $4$ & $4$ \\ \hline
+		$4$ & $0$ & $3$ & $3$ & $3$ \\ \hline
+		$5$ & $0$ & $2$ & $2$ & $2$ \\ \hline
+		$6$ & $0$ & $2$ & $2$ & $2$ \\ \hline
+		$7$ & $0$ & $4$ & $6$ & $6$ \\ \hline
+		$8$ & $0$ & $1$ & $5$ & $5$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Как видно $r_k^2 = r_k^3 \quad \forall k$, значит алгоритм окончен: в $r^3_k$ содержатся ранги вершин. Теперь нужно согласно им пронумеровать вершины графа.
+
+Для этого пользуемся следующим алгоритмом:
+
+\begin{enumerate}[nosep]
+	\item Присваиваем вершине с рангом 0 значение 1
+	\item Смотрим имеются ли еще вершины с рангом последней пронумерованной вершины. Если есть - даем ей следующий номер вершины и повторяем этот шаг. Если нет - приступаем к шагу 3. Если же все вершины пронумерованы: завершаем алгоритм.
+	\item Берем следующий ранг по возрастанию. Приступаем к шагу 2
+\end{enumerate}
+
+\bigskip
+
+Удобно делать этот алгорим используя таблицу, которую мы получили: дописываем к ней колонку $H_k$ где будут номера вершин. Выполняя алгоритм нумерации получаем следующую таблицу.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c | c | c |} 
+		\hline
+		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ & $H_k$ \\ \hline
+		$1$ & $0$ & $0$ & $0$ & $0$ & $1$ \\ \hline
+		$2$ & $0$ & $1$ & $1$ & $1$ & $2$ \\ \hline
+		$3$ & $0$ & $4$ & $4$ & $4$ & $6$ \\ \hline
+		$4$ & $0$ & $3$ & $3$ & $3$ & $5$ \\ \hline
+		$5$ & $0$ & $2$ & $2$ & $2$ & $3$ \\ \hline
+		$6$ & $0$ & $2$ & $2$ & $2$ & $4$ \\ \hline
+		$7$ & $0$ & $4$ & $6$ & $6$ & $8$ \\ \hline
+		$8$ & $0$ & $1$ & $5$ & $5$ & $7$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Используя эти данные перенумеруем вершины сети (по факту мы заменяем старый номер $k$ на $H_k$).
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label={\circled{1}}, fill=blue] (1) at (-4,0) {};
+		\node[vertex, label={\circled{2}}] (2) at (-3,0) {};
+		\node[vertex, label={\circled{6}}] (3) at (-2,-1) {};
+		\node[vertex, label={\circled{3}}] (4) at (0,0) {};
+		\node[vertex, label={\circled{5}}] (5) at (-1, -2) {};
+		\node[vertex, label=above right:\circled{4}] (6) at (0,-1) {};
+		\node[vertex, label=\circled{7}] (7) at (2,-1) {};
+		\node[vertex, label={\circled{8}}, fill=blue, fill=blue] (8) at (3.5,-1) {};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (2) -- node {} (3);
+		\draw[->, edge] (3) -- node {} (5);
+		\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
+		\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
+		\draw[->, edge] (7) -- node {} (8);
+		\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
+		\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
+		
+		\draw[->, edge, dashed] (4) -- node {} (6);
+		\draw[->, edge, dashed] (5) -- node {} (6);
+		
+		\node at (2.4, -0.85) {\squared{7}};
+		\node at (-2.35, -0.4) {\squared{2}};
+		\node at (-1.5, -1.25) {\squared{4}};
+		\node at (0.2, -0.4) {\squared{10}};
+		\node at (-0.6, -1.3) {\squared{9}};
+		
+	\end{tikzpicture}
+\end{figure}
+
+\subsection{Проект вычисления математического выражения}
+
+\problem[Проект вычисления математического выражения]
+
+Построить сетевую модель проекта вычисления значения выражения
+
+\[\boxed{\frac{\sqrt{ab}(a + b)^2}{\sqrt{a + b}(a + ab)}}\]
+
+для заданных величин $a, b$
+
+\bigskip
+
+\textbf{Таблица работ}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		j & работа & следующие работы \\\hline
+		$1$ & $ab$ & $\{4,5\}$ \\\hline
+		$2$ & $a+b$ & $\{3, 6\}$ \\\hline
+		$3$ & $(a+b)^2$ & $\{7\}$ \\\hline
+		$4$ & $\sqrt{ab}$ & $\{7\}$ \\\hline
+		$5$ & $(a+ab)$ & $\{8\}$ \\\hline
+		$6$ & $\sqrt{a+b}$ & $\{8\}$ \\\hline
+		$7$ & $\sqrt{ab}(a+b)^2$ & $\{9\}$ \\\hline
+		$8$ & $\sqrt{a+b}(a+ab)$ & $\{9\}$ \\\hline
+		$9$ & $\frac{\sqrt{ab}(a + b)^2}{\sqrt{a + b}(a + ab)}$ & $\O$ \\\hline
+	\end{tabular}
+\end{table}
+
+\bigskip
+
+\textbf{Построение сетевой модели}
+
+\fbox{Шаги 1,2} $\,$ Построение вершин и дуг для каждой работы, обозначение подчиненностей, добавление начальной и конечной вершин.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (s) at (-3.5,-2.5) {};
+		\node[vertex] (1) at (-3,-1) {};
+		\node[vertex] (2) at (-2,-1) {};
+		\node[vertex] (3) at (-3,-4) {};
+		\node[vertex] (4) at (-2,-4) {};
+		\node[vertex] (5) at (-1,-3) {};
+		\node[vertex] (6) at (0,-3) {};
+		\node[vertex] (7) at (-1,0) {};
+		\node[vertex] (8) at (0, 0) {};
+		\node[vertex] (9) at (-1,-2) {};
+		\node[vertex] (10) at (0, -2) {};
+		\node[vertex] (11) at (-1,-5) {};
+		\node[vertex] (12) at (0, -5) {};
+		\node[vertex] (13) at (1,-1) {};
+		\node[vertex] (14) at (2,-1) {};
+		\node[vertex] (15) at (1,-4) {};
+		\node[vertex] (16) at (2,-4) {};
+		\node[vertex] (17) at (3,-2.5) {};
+		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (18) at (4,-2.5) {};
+		
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+		\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
+		\draw[->, edge] (s) -- node {} (1);
+		\draw[->, edge] (s) -- node {} (3);
+		
+		\draw[->, edge, dashed] (2) -- node {} (7);
+		\draw[->, edge, dashed] (2) -- node {} (9);
+		\draw[->, edge, dashed] (4) -- node {} (5);
+		\draw[->, edge, dashed] (4) -- node {} (11);
+		\draw[->, edge, dashed] (12) -- node {} (15);
+		\draw[->, edge, dashed] (6) -- node {} (13);
+		\draw[->, edge, dashed] (8) -- node {} (13);
+		\draw[->, edge, dashed] (10) -- node {} (15);
+		\draw[->, edge, dashed] (14) -- node {} (17);
+		\draw[->, edge, dashed] (16) -- node {} (17);
+		
+	\end{tikzpicture}
+\end{figure}
+
+\fbox{Шаги 3,4} $\,$ Убираем фиктивные дуги и нумеруем вершины
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label={\circled{1}}, fill=blue] (s) at (-3.5,-2.5) {};
+		\node[vertex, label={\circled{2}}] (2) at (-2,-1) {};
+		\node[vertex, label={\circled{3}}] (4) at (-2,-4) {};
+		\node[vertex, label={\circled{5}}] (13) at (1,-1) {};
+		\node[vertex, label={\circled{4}}] (15) at (1,-4) {};
+		\node[vertex, label={\circled{6}}] (17) at (3,-2.5) {};
+		\node[vertex, label={\circled{7}}, fill=blue] (18) at (4,-2.5) {};
+		
+		
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} (2);
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} (4);
+		\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} (13);
+		\draw[->, edge] (2) -- node[above] {\squared{4}} (13);
+		\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} (15);
+		\draw[->, edge] (4) -- node[above] {\squared{6}} (15);
+		\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} (17);
+		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} (17);
+		\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
+		
+		
+		
+	\end{tikzpicture}
+\end{figure}
+
+Данная сеть строится и нумеруется просто, поэтому здесь нет нужды использовать алгоритм Форда.
