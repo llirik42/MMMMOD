@@ -1129,12 +1129,12 @@ $f(1) = g(n)$.
 
 Заметим, что
 \[
-g\big(i(j)\big) + \tau_j + f\big(k(j)\big) \le T\tag{*}.
+g\big(i(j)\big) + \tau_j + f\big(k(j)\big) \le T.
 \]
 
-Действительно, $g\big(i(j)\big)$ --- максимальное время выполнения всех работ до работы $j$, а $f\big(k(j)\big)$ --- после работы $j$, поэтому выражение слева уж никак не может быть больше времени всего проекта $T$.
+Действительно, левая часть --- это максимальная длина пути, содержащего дугу $j$, а правая часть --- максимальная длина пути во всей сети. То есть мы рассматриваем пути с максимальной длиной, при этом слева лишь пути через дугу $j$, а справа --- все пути в сети. 
 
-Из (*) следует, что к левой части можно добавить $\Delta_j \ge 0$ так, чтобы неравенство всё ещё выполнялось. Максимальное $\Delta_j$, которое можно прибавить, это значение, при котором будет достигаться равенство, то есть
+Из неравенства следует, что к левой части можно добавить некоторое $\Delta_j \ge 0$ так, чтобы неравенство всё ещё выполнялось. Максимальное $\Delta_j$, которое можно прибавить, это значение, при котором будет достигаться равенство, то есть
 
 \[
 g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
@@ -1168,7 +1168,7 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 		
 		\draw [<->] (1.5, 0.5) -- node[above right = -1mm] {$f\big(k(j)\big)$} (0.5, 1.5);
 	\end{tikzpicture}
-	\caption{Увеличение времени работы в сети}
+	\caption{Иллюстрация к доказательству}
 \end{figure}
 
 \implication
@@ -1194,19 +1194,17 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 	\item $b_{ik}$ --- вес дуги $\vec{ik}$;
 \end{itemize}
 
-тогда $x = (x_{ik})$ будем называть \definitionfont{потоком в сети} с величиной входного потока $v$, если выполняется следующие ограничения
+тогда $x = (x_{ik})$ будем называть \definitionfont{потоком в сети} с величиной входного потока $v(x)$, если выполняются следующие ограничения
 \[
 \forall l \in I \quad \sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il} = \begin{cases}
 	v, & l = 1, \\
 	0, & l = 2 \dots n-1, \\
 	-v, & l = n;
-\end{cases}
+\end{cases}\tag{1}
 \]
 
-(закон сохранения энергии)
-
 \[
-\forall j = (i, k) \quad x_{ik} \le b_{ik}.
+\forall j = (i, k) \quad x_{ik} \le b_{ik}\tag{2}.
 \]
 
 \definition
@@ -1215,58 +1213,123 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 
 \definition
 
-Пару $(S, \bar{S})$ будем называть \definitionfont{разрезом сети}, если $S$ и $\bar{S}$ разбивают множество вершин сети, при этом обязательно $1 \in S$, $n \in \bar{S}$.
+Пару $(S, \bar{S})$ будем называть \definitionfont{разрезом сети}, если $S$ и $\bar{S}$ разбивают множество вершин сети, при этом $1 \in S$, $n \in \bar{S}$.
 
 \definition
 
-\definitionfont{Пропускной способностью разреза} будем называть
+\definitionfont{Пропускной способностью разреза} будем называть сумму пропускных способностей всех дуг, идущих из $S$ в $\bar{S}$
 \[
 B(S, \bar{S}) = \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} b_{ik}
 \]
 
-По сути, это сумма пропускным способностей всех дуг, идущих из $S$ в $\bar{S}$.
-
 \fact[свойство разреза]
 
-Какой бы ни был поток $x = (x_{ik})$ и разрез $(S, \bar{S})$
+Для любого потока $x = (x_{ik})$ и любого разреза $(S, \bar{S})$
 \[
 v(x) \le B(S, \bar{S}).
 \]
 
 \prooof
 
-Напишем следующие выражение
-\[
-Z = \sum_{l \in S} \bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg).
-\]
+Определим величину
 
-Вспомним, что по определению разреза $1 \in S$, а значит $Z = v + \dots$. Также вспомним определение потока и условия оттуда, из них следует, что внутреннее выражение для всех $l \neq 1$ равняется $0$. Из всего этого следует, что
 \[
-Z = \underbrace{0}_{v = 1} + \underbrace{0 + \dots + 0}_{1 \neq l \in S} = v
+Z = \sum_{l \in S} \underbrace{\bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg)}_{\text{<<баланс>> для } l}.
 \]
-
-Посмотрим на $Z$ с другой стороны. Рассмотрим возможные случаи взаимного расположения вершин $i$ и $k$ для вершины $l$
 
 \begin{itemize}[nosep]
-	\item $i \in S, k \in S$;
+	\item[\fbox{1}] Вспомним, что по определению разреза $1 \in S$, а также вспомним (1) из определения потока в сети, из всего этого следует, что
+	\[
+	Z = \underbrace{v(x)}_{1 = l \in S} + \underbrace{0 + \dots + 0}_{1 \neq l \in S} = v(x).
+	\]
+
+	\item[\fbox{2}] Величина $Z$ представляет собой сумму <<балансов>> для каждой вершины $l \in S$. Пусть $E(l)$ --- множество всех дуг, которые встречаются в <<балансе>> для вершины $l$. Заметим, что в $E(l)$ некоторые дуги встречаются два раза: и в $\sum x_{lk}$, и в $\sum {x_{il}}$.
 	
-	\item $i \in S, k \in \bar{S}$;
+	Рассмотрим некоторую дугу $(i, k) \in E(l)$, на рисунке 3.9 изображены возможные случаи взаимного расположения её вершин.
 	
-	\item $k \in S, k \in S$.
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}{\linewidth}
+			\begin{figure}[H]
+				\centering	
+				\begin{tikzpicture}
+					\draw[very thick, dashed](0,0) circle (1.5);
+					\node[vertex, label=left:{$i$}] (i) at (-0.8,0) {};
+					\node[vertex, label=right:{$k$}] (k) at (0.8,0) {};
+					\draw (i) -- node {} (k);
+					\draw[->, edge] (i) -- node {} (k);
+					\node at (-1.5,1.1) {\large$S$};
+				\end{tikzpicture}
+				\caption{Случай 1: $i \in S, k \in S$}
+			\end{figure}
+		\end{subfigure}
+		\vfil
+		\begin{subfigure}{\linewidth}
+			\begin{figure}[H]
+				\centering	
+				\begin{tikzpicture}
+					\draw[very thick, dashed](0,0) circle (1.5);
+					\draw[very thick, dashed](5,0) circle (1.5);
+					\node[vertex, label=left:{$i$}] (i) at (0.5,0) {};
+					\node[vertex, label=right:{$k$}] (k) at (4.5,0) {};
+					\draw (i) -- node {} (k);
+					\draw[->, edge] (i) -- node {} (k);
+					\node at (-1.5,1.1) {\large$S$};
+					\node at (6.5,1.1) {\large$\bar{S}$};
+				\end{tikzpicture}
+				\caption{Случай 2: $i \in S, k \in \bar{S}$}
+			\end{figure}
+		\end{subfigure}
+		\vfil
+		\begin{subfigure}{\linewidth}
+			\begin{figure}[H]
+				\centering	
+				\begin{tikzpicture}
+					\draw[very thick, dashed](0,0) circle (1.5);
+					\draw[very thick, dashed](5,0) circle (1.5);
+					\node[vertex, label=left:{$i$}] (i) at (0.5,0) {};
+					\node[vertex, label=right:{$k$}] (k) at (4.5,0) {};
+					\draw (i) -- node {} (k);
+					\draw[->, edge] (i) -- node {} (k);
+					\node at (-1.5,1.1) {\large$\bar{S}$};
+					\node at (6.5,1.1) {\large$S$};
+				\end{tikzpicture}
+				\caption{Случай 3: $i \in \bar{S}, k \in S$}
+			\end{figure}
+		\end{subfigure}
+		\caption{Возможные случаи взаимного расположения вершин $i$ и $k$}
+		\label{fig:subfigures}
+	\end{figure}
+	
+	Если $(i, k)$ относится к первому случаю, то её вклад в <<баланс>> через $\sum x_{lk}$ будет нивелировать её вклад в <<баланс>> через $\sum x_{il}$. Таким образом 
+	
+	\begin{align*}
+		Z =& \; \sum_{l \in S} \bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg) \\
+		=& \;  \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} - \sum_{\underset{i \in \bar{S}, k \in S}{(i, k) \in J}} x_{ik} \\
+		\le& \; \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik}.
+	\end{align*}
+	
+	По (2) из определения потока в сети:
+	
+	\begin{align*}
+		Z \le& \; \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} \\
+		\le& \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} b_{ik} \\
+		=& \; B(S, \bar{S}).
+	\end{align*}
+	
+	\item[\fbox{3}] Мы доказали, что
+	\[
+	\begin{cases}
+		Z = v(x), \\
+		Z \le B(S, \bar{S}); 
+	\end{cases}
+	\]
+	\[
+	\Downarrow
+	\]
+	\[
+	v(x) \le B(S, \bar{S}).
+	\]
 \end{itemize}
-
-\begin{align*}
-	Z =& \; \sum_{l \in S} \bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \; (i, l) \in J} x_{il}\bigg) \\
-	=& \;  \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} - \sum_{\underset{i \in \bar{S}, k \in S}{(i, k) \in J}} x_{ik} \\
-	\le& \; \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} x_{ik} \\
-	\le& \sum_{\underset{i \in S, k \in \bar{S}}{(i, k) \in J}} b_{ik} \\
-	=& \; B(S, \bar{S}).
-\end{align*}
-
-Для перехода $\sum_{\dots}x_{ik} \le \sum_{\dots} b_{ik}$ использовалось условие из определения потока в сети.
-
-Таким образом $Z = v$ и $Z \le B(S, \bar{S})$, значит $v \le B(S, \bar{S})$.
-
-TODO: есть путаница, где-то просто $v$, а где-то $v(x)$.
 
 \fact[критерий максимальности потока]
