@@ -345,7 +345,7 @@
 
 \section{Практика построения сетей и нумерации вершин}
 
-\subsection{Проект постройки дома}
+\subsection{Проект постройки дома}\label{proj:house_building_project}
 
 \problem[Проект постройки дома]
 
@@ -543,7 +543,7 @@
 	\end{tikzpicture}
 \end{figure}
 
-Составляем табличный вид данного графа:
+Составляем табличный вид данной сети:
 
 \begin{table}[H]
 	\centering
@@ -588,7 +588,7 @@
 
 \bigskip
 
-Следуя алгоритму вычисляем $r^1_k$ используя табличный вид графа:
+Следуя алгоритму вычисляем $r^1_k$ используя табличный вид сети:
 
 \begin{enumerate}[nosep]
 	\item $r_2^1 = max\{r_2^1, r_1^1 + 1\} = max\{0,0+1\} = 1$
@@ -628,7 +628,7 @@
 
 \bigskip
 
-Следуя алгоритму вычисляем $r^2_k$ используя табличный вид графа:
+Следуя алгоритму вычисляем $r^2_k$ используя табличный вид сети:
 
 \begin{enumerate}[nosep]
 	\item $r_2^2 = max\{r_2^2, r_1^2 + 1\} = max\{0,0+1\} = 1$
@@ -665,7 +665,7 @@
 
 \bigskip
 
-Следуя алгоритму вычисляем $r^3_k$ используя табличный вид графа:
+Следуя алгоритму вычисляем $r^3_k$ используя табличный вид сети:
 
 \begin{enumerate}[nosep]
 	\item $r_2^3 = max\{r_2^3, r_1^3 + 1\} = max\{0,0+1\} = 1$
@@ -735,10 +735,10 @@
 	\begin{tikzpicture}[scale=2.2]
 		\node[vertex, label={\circled{1}}, fill=blue] (1) at (-4,0) {};
 		\node[vertex, label={\circled{2}}] (2) at (-3,0) {};
-		\node[vertex, label={\circled{6}}] (3) at (-2,-1) {};
+		\node[vertex, label={\circled{4}}] (3) at (-2,-1) {};
 		\node[vertex, label={\circled{3}}] (4) at (0,0) {};
 		\node[vertex, label={\circled{5}}] (5) at (-1, -2) {};
-		\node[vertex, label=above right:\circled{4}] (6) at (0,-1) {};
+		\node[vertex, label=above right:\circled{6}] (6) at (0,-1) {};
 		\node[vertex, label=\circled{7}] (7) at (2,-1) {};
 		\node[vertex, label={\circled{8}}, fill=blue, fill=blue] (8) at (3.5,-1) {};
 		
@@ -763,7 +763,7 @@
 	\end{tikzpicture}
 \end{figure}
 
-\subsection{Проект вычисления математического выражения}
+\subsection{Проект вычисления математического выражения}\label{proj:math_expr_calc_project}
 
 \problem[Проект вычисления математического выражения]
 
@@ -874,14 +874,12 @@
 		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} (17);
 		\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
 		
-		
-		
 	\end{tikzpicture}
 \end{figure}
 
 Данная сеть строится и нумеруется просто, поэтому здесь нет нужды использовать алгоритм Форда.
-=======
-\section{Поиск максимальных путей}
+
+\section{Поиск максимальных путей}\label{alg:max_length_path_searching}
 
 \definition
 
@@ -1270,3 +1268,599 @@ Z = \underbrace{0}_{v = 1} + \underbrace{0 + \dots + 0}_{1 \neq l \in S} = v
 TODO: есть путаница, где-то просто $v$, а где-то $v(x)$.
 
 \fact[критерий максимальности потока]
+
+\bigskip
+\section{Практика поиска максимального пути в сети}
+\subsection{Проект вычисления математического выражения}
+
+Добавим в \hyperref[proj:math_expr_calc_project]{проект вычисления математического выражения} данные о единицах времени, необходимых на вычисление математических операций:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | } 
+		\hline
+		Операция & Количество единиц времени \\ \hline
+		Сложение & $1$ \\ \hline
+		Умножение & $2$ \\ \hline
+		Деление & $4$ \\ \hline
+		Извлечение корня & $6$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Необходимо найти за какое наименьшее время может быть вычислено выражение, если число вычислителей не ограничено.
+
+\bigskip
+
+\textbf{Постройка взвешенной сети}
+
+Мы уже построили сеть данного проекта, можно её дополнить, добавив веса ребрам исходя из таблицы работ и таблицы с данными о затрачиваемых единиц времени.
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[scale=2.2]
+		\node[vertex, label={\circled{1}}, fill=blue] (s) at (-3.5,-2.5) {};
+		\node[vertex, label={\circled{2}}] (2) at (-2,-1) {};
+		\node[vertex, label={\circled{3}}] (4) at (-2,-4) {};
+		\node[vertex, label={\circled{5}}] (13) at (1,-1) {};
+		\node[vertex, label={\circled{4}}] (15) at (1,-4) {};
+		\node[vertex, label={\circled{6}}] (17) at (3,-2.5) {};
+		\node[vertex, label={\circled{7}}, fill=blue] (18) at (4,-2.5) {};
+		
+		
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} node[below] {2} (2);
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} node[below] {1} (4);
+		\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} node[above=10mm, right=12mm] {2} (13);
+		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {6} (13);
+		\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} node[below=16mm, right=10mm] {1} (15);
+		\draw[->, edge] (4) -- node[above] {\squared{6}} node[below] {6} (15);
+		\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} node[below] {2} (17);
+		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} node[below] {2} (17);
+		\draw[->, edge] (17) -- node[above] {\squared{9}} node[below] {4} (18);
+		
+	\end{tikzpicture}
+\end{figure}
+
+\bigskip
+
+\textbf{Решение задачи}
+
+По факту решение данной задачи это максимальная длина пути из вершины 1 в вершину 7: $\textbf{критическое время}$. Решение подобных задач было разобрано в \hyperref[alg:max_length_path_searching]{главе 3.4: Поиск максимальных путей}.
+
+$f(i)$ --- длина максимального пути из вершины $i$ в вершину $n$
+
+\[\boxed{f(i) = \max_{j: \; i(j) = i} \Big\{\tau_j + f\big(k(j)\big)\Big\}}\]
+
+Во время решения будем заполнять следующую таблицу:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | } 
+		\hline
+		$i$ & $f(i)$ & $j(i)$ \\ \hline
+		$1$ & & \\ \hline
+		$2$ & & \\ \hline
+		$3$ & & \\ \hline
+		$4$ & & \\ \hline
+		$5$ & & \\ \hline
+		$6$ & & \\ \hline
+		$7$ & & \\ \hline
+	\end{tabular}
+\end{table}
+
+где $j(i)$ --- номер дуги, с которой начинается максимально длинный путь из $i$ в $n$
+
+Будем заполнять таблицу начиная с $f(7)$ и проходясь по индексам вниз вплоть до $f(1)$, где находится наше решение.
+Для этого будем вычислять $f(i)$ выписывая в столбец разные $j$, считая для них $\tau_j + f(k(j))$ и обводя в кружок то значение, на котором достигается максимум.
+
+\bigskip
+
+\begin{enumerate}[nosep]
+	\item[\fbox{Шаг 1}] На первом шаге $n = 7$
+	
+	$f(7)$ --- длина максимально длинного пути из вершины 7 в вершину 7, очевидно что здесь нет никакого пути, значит $f(7) = 0$, а $j(7)$ не определено.
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & & \\ \hline
+			$6$ & & \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 2}] $n = 6$
+	
+	\[
+	f(6) = \begin{array}{c|l}
+		9 & \tau_9 + f(7) = 4 + 0 = \circled{4} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & & \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 3}] $n = 5$
+	
+	\[
+	f(5) = \begin{array}{c|l}
+		7 & \tau_9 + f(6) = 2 + 4 = \circled{6} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & $6$ & $7$ \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 4}] $n = 4$
+	
+	\[
+	f(4) = \begin{array}{c|l}
+		8 & \tau_8 + f(6) = 2 + 4 = \circled{6} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$5$ & $6$ & $8$ \\ \hline
+			$5$ & $6$ & $7$ \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 5}] $n = 3$
+	
+	\[
+	f(3) = \begin{array}{c|l}
+		3 & \tau_3 + f(5) = 2 + 6 = 8 \\
+		6 & \tau_6 + f(4) = 6 + 6 = \circled{12} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & $12$ & $6$ \\ \hline
+			$5$ & $6$ & $8$ \\ \hline
+			$5$ & $6$ & $7$ \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 6}] $n = 2$
+	
+	\[
+	f(2) = \begin{array}{c|l}
+		4 & \tau_4 + f(5) = 6 + 6 = \circled{12} \\
+		5 & \tau_5 + f(4) = 1 + 6 = 7 \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & $12$ & $4$ \\ \hline
+			$3$ & $12$ & $6$ \\ \hline
+			$5$ & $6$ & $8$ \\ \hline
+			$5$ & $6$ & $7$ \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 7}] $n = 1$
+	
+	\[
+	f(1) = \begin{array}{c|l}
+		1 & \tau_1 + f(2) = 2 + 12 = \circled{14} \\
+		2 & \tau_2 + f(3) = 1 + 12 = 13 \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & $14$ & $1$ \\ \hline
+			$2$ & $12$ & $4$ \\ \hline
+			$3$ & $12$ & $6$ \\ \hline
+			$5$ & $6$ & $8$ \\ \hline
+			$5$ & $6$ & $7$ \\ \hline
+			$6$ & $4$ & $9$ \\ \hline
+			$7$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+\end{enumerate}
+
+\bigskip
+
+\textbf{Определенние пути}
+
+Мы заполнили таблицу, длина длиннейшего пути оказалась равна $f(1) = 14$. Теперь по таблице вычислим этот путь.
+
+Для этого рассматриваем столбец $j(i)$ --- как помним это дуги, с которых начинается максимальный путь для $f(i)$.
+
+Путь начинается в $j(1)$. По таблице видно, что $j(1) = 1$, а дуга с номером 2 ведет в вершину 2, смотрим для неё $j(2)$ и идём так по вершинам, пока не достигнем вершины с номером 7. Графически этот путь выглядит так:
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, minimum size=1cm, font=\large},
+		scale=2.2
+		]
+		\node[vertex] (1) at (0, 0) {1};
+		\node[vertex] (2) at (1, 0) {2};
+		\node[vertex] (3) at (2, 0) {5};
+		\node[vertex] (4) at (3, 0) {6};
+		\node[vertex] (5) at (4, 0) {7};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {2} (2);
+		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {6} (3);
+		\draw[->, edge] (3) -- node[above] {\squared{7}} node[below] {2} (4);
+		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {4} (5);
+		
+	\end{tikzpicture}
+	\caption{Путь максимальной длины из вершины 1 в вершину 7. Сверху дуг --- номер дуги в сети, снизу --- её вес}
+\end{figure}
+
+Как видно этот путь не содержит вершины $3, 4$.
+
+\bigskip
+
+\textbf{Вычисление резерва времени выполнения работы}
+
+Вычислим резерв времени выполнения работы 3 (на сколько максимально можно увеличить время этой работы, чтобы общее время не увеличилось).
+
+\[
+\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 14 - f(5) - g(3) - 2
+\]
+
+$g(3)$ --- это максимальная длина пути от вершины 1 до вершины 3, по графу сразу видно что $g(3) = 1$.
+
+$T$ --- это критическое время.
+
+\bigskip
+
+Тогда:
+
+\[
+\Delta^{max}_3 = 14 - f(5) - g(3) -2 = 12 - 6 - 1 = 5
+\]
+
+\bigskip
+
+\subsection{Проект постройки дома}
+
+Добавим в \hyperref[proj:house_building_project]{проект постройки дома} данные о единицах времени, необходимых на выполнение работ. Сделаем это сразу в табличный вид сети, добавив столбец с весами дуг:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | c | c |} 
+		\hline
+		$j$ & $i(j)$ & $k(j)$ & $\tau(j)$ \\ \hline
+		
+		$1$ & $1$ & $2$ & $0.5$ \\ \hline
+		$2$ & $2$ & $4$ & $0.5$ \\ \hline
+		$3$ & $2$ & $3$ & $1$ \\ \hline
+		$4$ & $4$ & $5$ & $4$ \\ \hline
+		$5$ & $5$ & $8$ & $1$ \\ \hline
+		$6$ & $6$ & $7$ & $2$ \\ \hline
+		$7$ & $7$ & $8$ & $2$ \\ \hline
+		$8$ & $3$ & $8$ & $3$ \\ \hline
+		$9$ & $5$ & $6$ & $0$ \\ \hline
+		$10$ & $3$ & $6$ & $0$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Используя данную таблицу так же можно вычислить критическое время проекта.
+
+Решение здесь фактически ничем не отличается от решения предыдущей задачи, поэтому сразу приступим к заполнению таблицы.
+
+\bigskip
+
+\begin{enumerate}[nosep]
+	\item[\fbox{Шаг 1}] На первом шаге $n = 8$
+	
+	$f(8) = 0$, $j(8)$ не определено.
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & & \\ \hline
+			$6$ & & \\ \hline
+			$7$ & & \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 2}] $n = 7$
+	
+	\[
+	f(7) = \begin{array}{c|l}
+		7 & \tau_7 + f(8) = 2 + 0 = \circled{2} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & & \\ \hline
+			$6$ & & \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 3}] $n = 6$
+	
+	\[
+	f(6) = \begin{array}{c|l}
+		6 & \tau_6 + f(7) = 2 + 2 = \circled{4} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & & \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 4}] $n = 5$
+	
+	\[
+	f(5) = \begin{array}{c|l}
+		5 & \tau_5 + f(8) = 1 + 0 = 1 \\
+		9 & \tau_9 + f(6) = 0 + 4 = \circled{4} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & & \\ \hline
+			$5$ & $4$ & $9$ \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 5}] $n = 4$
+	
+	\[
+	f(4) = \begin{array}{c|l}
+		4 & \tau_4 + f(5) = 4 + 4 = \circled{8} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & & \\ \hline
+			$4$ & $8$ & $4$ \\ \hline
+			$5$ & $4$ & $9$ \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 6}] $n = 3$
+	
+	\[
+	f(3) = \begin{array}{c|l}
+		8 & \tau_8 + f(8) = 3 + 0 = 3 \\
+		10 & \tau_10 + f(6) = 0 + 4 = \circled{4} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & & \\ \hline
+			$3$ & $4$ & $10$ \\ \hline
+			$4$ & $8$ & $4$ \\ \hline
+			$5$ & $4$ & $9$ \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 7}] $n = 2$
+	
+	\[
+	f(2) = \begin{array}{c|l}
+		2 & \tau_2 + f(4) = 0.5 + 8 = \circled{8.5} \\
+		3 & \tau_3 + f(3) = 1 + 4 = 5 \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & & \\ \hline
+			$2$ & $8.5$ & $2$ \\ \hline
+			$3$ & $4$ & $10$ \\ \hline
+			$4$ & $8$ & $4$ \\ \hline
+			$5$ & $4$ & $9$ \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 8}] $n = 1$
+	
+	\[
+	f(1) = \begin{array}{c|l}
+		1 & \tau_1 + f(2) = 0.5 + 8.5 = \circled{9} \\
+	\end{array}
+	\]
+	
+	Запишем результат в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$i$ & $f(i)$ & $j(i)$ \\ \hline
+			$1$ & $9$ & $1$ \\ \hline
+			$2$ & $8.5$ & $2$ \\ \hline
+			$3$ & $4$ & $10$ \\ \hline
+			$4$ & $8$ & $4$ \\ \hline
+			$5$ & $4$ & $9$ \\ \hline
+			$6$ & $4$ & $6$ \\ \hline
+			$7$ & $2$ & $7$ \\ \hline
+			$8$ & $0$ & $-$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+\end{enumerate}
+
+\bigskip
+
+\textbf{Определенние пути}
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, minimum size=1cm, font=\large},
+		scale=2.2
+		]
+		\node[vertex] (1) at (0, 0) {1};
+		\node[vertex] (2) at (1, 0) {2};
+		\node[vertex] (3) at (2, 0) {4};
+		\node[vertex] (4) at (3, 0) {5};
+		\node[vertex] (5) at (4, 0) {6};
+		\node[vertex] (6) at (5, 0) {7};
+		\node[vertex] (7) at (6, 0) {8};
+		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {0.5} (2);
+		\draw[->, edge] (2) -- node[above] {\squared{2}} node[below] {0.5} (3);
+		\draw[->, edge] (3) -- node[above] {\squared{4}} node[below] {4} (4);
+		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {0} (5);
+		\draw[->, edge] (5) -- node[above] {\squared{6}} node[below] {2} (6);
+		\draw[->, edge] (6) -- node[above] {\squared{7}} node[below] {2} (7);
+		
+	\end{tikzpicture}
+\end{figure}
+
+\bigskip
+
+\textbf{Вычисление резерва времени выполнения работы}
+
+Вычислим резерв времени выполнения работы 3
+
+\[
+\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 9 - f(3) - g(2) - 1 = 8 - 4 - 0.5 = 3.5 
+\]
