@@ -276,7 +276,7 @@
 	\caption{Сеть для проекта из примера. Дуги $11$ и $12$ является фиктивными, то есть не соответствуют работам из модели проекта, они нужны для целостности сети.}
 \end{figure}
 
-\algorithm[построения сетевой модели]
+\algorithm[построения сетевой модели]\label{alg:building_network_model}
 
 \begin{enumerate}[nosep]
 	\item[]
@@ -363,32 +363,29 @@
 
 \section{Практика построения сетей и нумерации вершин}
 
-\subsection{Проект постройки дома}\label{proj:house_building_project}
+\subsection{Проект постройки дома}
+\project[постройки дома]\label{proj:house_building_project}
 
-\problem[Проект постройки дома]
+\textbf{Исходные данные}
 
-Имеется проект постройки дома состоящий из восьми работ:
-
-\bigskip
+Имеется проект постройки дома состоящий из восьми работ, необходимо построить сетевую модель проекта с корректной нумерацией вершин. Список работ:
 
 \begin{enumerate}[nosep]
-	\item Очистка участка
-	\item Земляные работы под фундамент
-	\item Прокладка наружных коммуникаций
-	\item Заливка фундамента и возведение стен
-	\item Устройство крыши
-	\item Прокладка внутренних коммуникаций
-	\item Внутренние отделочные работы
-	\item Обустройство территории
+	\item очистка участка,
+	\item земляные работы под фундамент,
+	\item прокладка наружных коммуникаций,
+	\item заливка фундамента и возведение стен,
+	\item устройство крыши,
+	\item прокладка внутренних коммуникаций,
+	\item внутренние отделочные работы,
+	\item обустройство территории.
 \end{enumerate}
 
 \bigskip
 
-Необходимо построить сетевую модель проекта и пронумеровать его вершины.
-
-\bigskip
-
 \textbf{Таблица работ}
+
+Для удобства дальнейшей работы изобразим модель проекта в виде таблицы
 
 \begin{table}[H]
 	\centering
@@ -410,343 +407,340 @@
 
 \textbf{Построение сетевой модели}
 
-\fbox{Шаг 1} $\,$ Построение вершин и дуг для каждой работы
+Будем использовать \hyperref[alg:building_network_model]{алгоритм построения сетевой модели}.
 
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex] (1) at (-3,0) {};
-		\node[vertex] (2) at (-2,0) {};
-		\node[vertex] (3) at (-3,-1) {};
-		\node[vertex] (4) at (-2,-1) {};
-		\node[vertex] (5) at (-1,0) {};
-		\node[vertex] (6) at (0,0) {};
-		\node[vertex] (7) at (-2,-2) {};
-		\node[vertex] (8) at (-1, -2) {};
-		\node[vertex] (9) at (0,-2) {};
-		\node[vertex] (10) at (1, -2) {};
-		\node[vertex] (11) at (0,-1) {};
-		\node[vertex] (12) at (1, -1) {};
-		\node[vertex] (13) at (2,-1) {};
-		\node[vertex] (14) at (3, -1) {};
-		\node[vertex] (15) at (1,0) {};
-		\node[vertex] (16) at (2,0) {};
-		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
-		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
-		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
-		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
-		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
-		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
-		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
-		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
-		
-	\end{tikzpicture}
-\end{figure}
+\begin{itemize}[nosep]
+	\item[\fbox{Шаг 1}] Построение вершин и дуг для каждой работы
 
-\fbox{Шаг 2} $\,$ Обозначение подчиненностей, добавление начальной и конечной вершин
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex] (1) at (-3,0) {};
+			\node[vertex] (2) at (-2,0) {};
+			\node[vertex] (3) at (-3,-1) {};
+			\node[vertex] (4) at (-2,-1) {};
+			\node[vertex] (5) at (-1,0) {};
+			\node[vertex] (6) at (0,0) {};
+			\node[vertex] (7) at (-2,-2) {};
+			\node[vertex] (8) at (-1, -2) {};
+			\node[vertex] (9) at (0,-2) {};
+			\node[vertex] (10) at (1, -2) {};
+			\node[vertex] (11) at (0,-1) {};
+			\node[vertex] (12) at (1, -1) {};
+			\node[vertex] (13) at (2,-1) {};
+			\node[vertex] (14) at (3, -1) {};
+			\node[vertex] (15) at (1,0) {};
+			\node[vertex] (16) at (2,0) {};
+			
+			\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+			\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+			\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+			\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+			\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+			\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+			\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+			\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+			
+		\end{tikzpicture}
+	\end{figure}
+	
+	\item[\fbox{Шаг 2}] Обозначение подчиненностей (по таблице модели проекта), добавление начальной и конечной вершин
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
+			\node[vertex] (2) at (-3,0) {};
+			\node[vertex] (3) at (-3,-1) {};
+			\node[vertex] (4) at (-2,-1) {};
+			\node[vertex] (5) at (-1,0) {};
+			\node[vertex] (6) at (0,0) {};
+			\node[vertex] (7) at (-2,-2) {};
+			\node[vertex] (8) at (-1, -2) {};
+			\node[vertex] (9) at (0,-2) {};
+			\node[vertex] (10) at (1, -2) {};
+			\node[vertex] (11) at (0,-1) {};
+			\node[vertex] (12) at (1, -1) {};
+			\node[vertex] (13) at (2,-1) {};
+			\node[vertex] (14) at (3, -1) {};
+			\node[vertex] (15) at (1,0) {};
+			\node[vertex] (16) at (2,0) {};
+			\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (17) at (3.5,-1) {};
+			
+			\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+			\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+			\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+			\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+			\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+			\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+			\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+			\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+			
+			\draw[->, edge, dashed] (2) -- node {} (3);
+			\draw[->, edge, dashed] (2) -- node {} (5);
+			\draw[->, edge, dashed] (4) -- node {} (7);
+			\draw[->, edge, dashed] (8) -- node {} (9);
+			\draw[->, edge, dashed] (6) -- node {} (11);
+			\draw[->, edge, dashed] (6) -- node {} (15);
+			\draw[->, edge, dashed] (12) -- node {} (13);
+			\draw[->, edge, dashed] (8) -- node {} (11);
+			\draw[->, edge, dashed] (10) -- node {} (17);
+			\draw[->, edge, dashed] (14) -- node {} (17);
+			\draw[->, edge, dashed] (16) -- node {} (17);
+			
+		\end{tikzpicture}
+	\end{figure}
+	
+	\item[\fbox{Шаг 3}] Удаление фиктивных дуг
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
+			\node[vertex] (2) at (-3,0) {};
+			\node[vertex] (3) at (-2,-1) {};
+			\node[vertex] (4) at (0,0) {};
+			\node[vertex] (5) at (-1, -2) {};
+			\node[vertex] (6) at (0,-1) {};
+			\node[vertex] (7) at (2,-1) {};
+			\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (8) at (3.5,-1) {};
+			
+			\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+			\draw[->, edge] (2) -- node {} (3);
+			\draw[->, edge] (3) -- node {} (5);
+			\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
+			\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
+			\draw[->, edge] (7) -- node {} (8);
+			\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
+			\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
+			
+			\draw[->, edge, dashed] (4) -- node {} (6);
+			\draw[->, edge, dashed] (5) -- node {} (6);
+			
+			\node at (2.2, -0.8) {\squared{7}};
+			\node at (-2.25, -0.5) {\squared{2}};
+			\node at (-1.5, -1.25) {\squared{4}};
+			
+		\end{tikzpicture}
+	\end{figure}
+	
+	\item[\fbox{Шаг 4}] Нумерация вершин. Пронумеруем вершины, стараясь сделать $i(j) < k(j)$.
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex, label={\circled{1}}, fill=blue] (1) at (-4,0) {};
+			\node[vertex, label={\circled{2}}] (2) at (-3,0) {};
+			\node[vertex, label={\circled{6}}] (3) at (-2,-1) {};
+			\node[vertex, label={\circled{5}}] (4) at (0,0) {};
+			\node[vertex, label={\circled{4}}] (5) at (-1, -2) {};
+			\node[vertex, label=above right:\circled{3}] (6) at (0,-1) {};
+			\node[vertex, label=\circled{8}] (7) at (2,-1) {};
+			\node[vertex, label={\circled{7}}, fill=blue, fill=blue] (8) at (3.5,-1) {};
+			
+			\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+			\draw[->, edge] (2) -- node {} (3);
+			\draw[->, edge] (3) -- node {} (5);
+			\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
+			\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
+			\draw[->, edge] (7) -- node {} (8);
+			\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
+			\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
+			
+			\draw[->, edge, dashed] (4) -- node {} (6);
+			\draw[->, edge, dashed] (5) -- node {} (6);
+			
+			\node at (2.4, -0.85) {\squared{7}};
+			\node at (-2.35, -0.4) {\squared{2}};
+			\node at (-1.5, -1.25) {\squared{4}};
+			\node at (0.2, -0.4) {\squared{10}};
+			\node at (-0.6, -1.3) {\squared{9}};
+			
+		\end{tikzpicture}
+	\end{figure}
+	
+	Составим табличный вид данной сети:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$j$ & $i(j)$ & $k(j)$ \\ \hline
+			
+			$1$ & $1$ & $2$ \\ \hline
+			$2$ & $2$ & $6$ \\ \hline
+			$3$ & $2$ & $5$ \\ \hline
+			$4$ & $6$ & $4$ \\ \hline
+			$5$ & $4$ & $7$ \\ \hline
+			$6$ & $3$ & $8$ \\ \hline
+			$7$ & $8$ & $7$ \\ \hline
+			$8$ & $5$ & $7$ \\ \hline
+			$9$ & $4$ & $3$ \\ \hline
+			$10$ & $5$ & $3$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Видно, что для $j \in \{4, 7, 9, 10\}$ \underline{не удалось корректно пронумеровать вершины} так как $i(j) > k(j)$.
 
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
-		\node[vertex] (2) at (-3,0) {};
-		\node[vertex] (3) at (-3,-1) {};
-		\node[vertex] (4) at (-2,-1) {};
-		\node[vertex] (5) at (-1,0) {};
-		\node[vertex] (6) at (0,0) {};
-		\node[vertex] (7) at (-2,-2) {};
-		\node[vertex] (8) at (-1, -2) {};
-		\node[vertex] (9) at (0,-2) {};
-		\node[vertex] (10) at (1, -2) {};
-		\node[vertex] (11) at (0,-1) {};
-		\node[vertex] (12) at (1, -1) {};
-		\node[vertex] (13) at (2,-1) {};
-		\node[vertex] (14) at (3, -1) {};
-		\node[vertex] (15) at (1,0) {};
-		\node[vertex] (16) at (2,0) {};
-		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (17) at (3.5,-1) {};
-		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
-		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
-		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
-		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
-		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
-		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
-		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
-		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
-		
-		\draw[->, edge, dashed] (2) -- node {} (3);
-		\draw[->, edge, dashed] (2) -- node {} (5);
-		\draw[->, edge, dashed] (4) -- node {} (7);
-		\draw[->, edge, dashed] (8) -- node {} (9);
-		\draw[->, edge, dashed] (6) -- node {} (11);
-		\draw[->, edge, dashed] (6) -- node {} (15);
-		\draw[->, edge, dashed] (12) -- node {} (13);
-		\draw[->, edge, dashed] (8) -- node {} (11);
-		\draw[->, edge, dashed] (10) -- node {} (17);
-		\draw[->, edge, dashed] (14) -- node {} (17);
-		\draw[->, edge, dashed] (16) -- node {} (17);
-		
-	\end{tikzpicture}
-\end{figure}
-
-\fbox{Шаг 3} $\,$ Убираем фиктивные дуги
-
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (1) at (-4,0) {};
-		\node[vertex] (2) at (-3,0) {};
-		\node[vertex] (3) at (-2,-1) {};
-		\node[vertex] (4) at (0,0) {};
-		\node[vertex] (5) at (-1, -2) {};
-		\node[vertex] (6) at (0,-1) {};
-		\node[vertex] (7) at (2,-1) {};
-		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (8) at (3.5,-1) {};
-		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
-		\draw[->, edge] (2) -- node {} (3);
-		\draw[->, edge] (3) -- node {} (5);
-		\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
-		\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
-		\draw[->, edge] (7) -- node {} (8);
-		\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
-		\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
-		
-		\draw[->, edge, dashed] (4) -- node {} (6);
-		\draw[->, edge, dashed] (5) -- node {} (6);
-		
-		\node at (2.2, -0.8) {\squared{7}};
-		\node at (-2.25, -0.5) {\squared{2}};
-		\node at (-1.5, -1.25) {\squared{4}};
-		
-	\end{tikzpicture}
-\end{figure}
-
-\fbox{Шаг 4} $\,$ Нумерация вершин
-
-Пронумеруем вершины, стараясь сделать так, чтобы $i(j) < k(j)$
-
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex, label={\circled{1}}, fill=blue] (1) at (-4,0) {};
-		\node[vertex, label={\circled{2}}] (2) at (-3,0) {};
-		\node[vertex, label={\circled{6}}] (3) at (-2,-1) {};
-		\node[vertex, label={\circled{5}}] (4) at (0,0) {};
-		\node[vertex, label={\circled{4}}] (5) at (-1, -2) {};
-		\node[vertex, label=above right:\circled{3}] (6) at (0,-1) {};
-		\node[vertex, label=\circled{8}] (7) at (2,-1) {};
-		\node[vertex, label={\circled{7}}, fill=blue, fill=blue] (8) at (3.5,-1) {};
-		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
-		\draw[->, edge] (2) -- node {} (3);
-		\draw[->, edge] (3) -- node {} (5);
-		\draw[->, edge] (2) -- node[above] {\squared{3}} (4);
-		\draw[->, edge] (6) -- node[above] {\squared{6}} (7);
-		\draw[->, edge] (7) -- node {} (8);
-		\draw[->, edge] (4) -- node[above] {\squared{8}} (8);
-		\draw[->, edge] (5) -- node[above] {\squared{5}} (8);
-		
-		\draw[->, edge, dashed] (4) -- node {} (6);
-		\draw[->, edge, dashed] (5) -- node {} (6);
-		
-		\node at (2.4, -0.85) {\squared{7}};
-		\node at (-2.35, -0.4) {\squared{2}};
-		\node at (-1.5, -1.25) {\squared{4}};
-		\node at (0.2, -0.4) {\squared{10}};
-		\node at (-0.6, -1.3) {\squared{9}};
-		
-	\end{tikzpicture}
-\end{figure}
-
-Составляем табличный вид данной сети:
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | c | } 
-		\hline
-		$j$ & $i(j)$ & $k(j)$ \\ \hline
-		
-		$1$ & $1$ & $2$ \\ \hline
-		$2$ & $2$ & $6$ \\ \hline
-		$3$ & $2$ & $5$ \\ \hline
-		$4$ & $6$ & $4$ \\ \hline
-		$5$ & $4$ & $7$ \\ \hline
-		$6$ & $3$ & $8$ \\ \hline
-		$7$ & $8$ & $7$ \\ \hline
-		$8$ & $5$ & $7$ \\ \hline
-		$9$ & $4$ & $3$ \\ \hline
-		$10$ & $5$ & $3$ \\ \hline
-	\end{tabular}
-\end{table}
-
-Как видно для $j = \{4, 7, 9, 10\}$ не удалось корректно пронумеровать вершины. Воспользуемся \hyperref[alg:ford]{алгоритмом Форда} чтобы определить ранги вершин и корректно их пронумеровать.
-
-Будем шаг за шагом заполнять таблицу, для итерации 0: все $r_k^0 = 0$
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | } 
-		\hline
-		$k$ & $r_k^0$ \\ \hline
-		$1$ & $0$ \\ \hline
-		$2$ & $0$ \\ \hline
-		$3$ & $0$ \\ \hline
-		$4$ & $0$ \\ \hline
-		$5$ & $0$ \\ \hline
-		$6$ & $0$ \\ \hline
-		$7$ & $0$ \\ \hline
-		$8$ & $0$ \\ \hline
-	\end{tabular}
-\end{table}
-
-\fbox{Итерация 1}
+\end{itemize}
 
 \bigskip
 
-Следуя алгоритму вычисляем $r^1_k$ используя табличный вид сети:
+\textbf{Нумерация вершин}
 
-\begin{enumerate}[nosep]
-	\item $r_2^1 = max\{r_2^1, r_1^1 + 1\} = max\{0,0+1\} = 1$
-	\item $r_6^1 = max\{r_6^1, r_2^1 + 1\} = max\{0,1+1\} = 2$
-	\item $r_5^1 = max\{r_5^1, r_2^1 + 1\} = max\{0,1+1\} = 2$
-	\item $r_4^1 = max\{r_4^1, r_6^1 + 1\} = max\{0,2+1\} = 3$
-	\item $r_7^1 = max\{r_7^1, r_4^1 + 1\} = max\{0,3+1\} = 4$
-	\item $r_8^1 = max\{r_8^1, r_3^1 + 1\} = max\{0,0+1\} = 1$
-	\item $r_7^1 = max\{r_7^1, r_8^1 + 1\} = max\{4,1+1\} = 4$
-	\item $r_7^1 = max\{r_7^1, r_5^1 + 1\} = max\{4,2+1\} = 4$
-	\item $r_3^1 = max\{r_3^1, r_4^1 + 1\} = max\{0,3+1\} = 4$
-	\item $r_3^1 = max\{r_3^1, r_5^1 + 1\} = max\{4,2+1\} = 4$
-\end{enumerate}
+Воспользуемся \hyperref[alg:ford]{алгоритмом Форда}, чтобы определить ранги вершин и корректно их пронумеровать. Будем итеративно заполнять таблицу из алгоритма ($i$ --- номер итерации).
 
-Заносим результаты в таблицу:
+\begin{itemize}[nosep]
+	\item[\fbox{$i=0$}] По алгоритму все $r_k^0 = 0$.
 
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } 
+			\hline
+			$k$ & $r_k^0$ \\ \hline
+			$1$ & $0$ \\ \hline
+			$2$ & $0$ \\ \hline
+			$3$ & $0$ \\ \hline
+			$4$ & $0$ \\ \hline
+			$5$ & $0$ \\ \hline
+			$6$ & $0$ \\ \hline
+			$7$ & $0$ \\ \hline
+			$8$ & $0$ \\ \hline
+		\end{tabular}
+	\end{table}
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | c | } 
-		\hline
-		$k$ & $r_k^0$ & $r_k^1$ \\ \hline
-		$1$ & $0$ & $0$ \\ \hline
-		$2$ & $0$ & $1$ \\ \hline
-		$3$ & $0$ & $4$ \\ \hline
-		$4$ & $0$ & $3$ \\ \hline
-		$5$ & $0$ & $2$ \\ \hline
-		$6$ & $0$ & $2$ \\ \hline
-		$7$ & $0$ & $4$ \\ \hline
-		$8$ & $0$ & $1$ \\ \hline
-	\end{tabular}
-\end{table}
+	\item[\fbox{$i=1$}] Следуя алгоритму, вычисляем $r^1_k$, используя табличный вид сети:
 
-\bigskip
+	\begin{enumerate}[nosep]
+		\item[\underline{$j=1$}:] $r_2^1 = \max\{r_2^1, r_1^1 + 1\} = \max\{0,0+1\} = 1$
+		\item[\underline{$j=2$}:] $r_6^1 = \max\{r_6^1, r_2^1 + 1\} = \max\{0,1+1\} = 2$
+		\item[\underline{$j=3$}:] $r_5^1 = \max\{r_5^1, r_2^1 + 1\} = \max\{0,1+1\} = 2$
+		\item[\underline{$j=4$}:] $r_4^1 = \max\{r_4^1, r_6^1 + 1\} = \max\{0,2+1\} = 3$
+		\item[\underline{$j=5$}:] $r_7^1 = \max\{r_7^1, r_4^1 + 1\} = \max\{0,3+1\} = 4$
+		\item[\underline{$j=6$}:] $r_8^1 = \max\{r_8^1, r_3^1 + 1\} = \max\{0,0+1\} = 1$
+		\item[\underline{$j=7$}:] $r_7^1 = \max\{r_7^1, r_8^1 + 1\} = \max\{4,1+1\} = 4$
+		\item[\underline{$j=8$}:] $r_7^1 = \max\{r_7^1, r_5^1 + 1\} = \max\{4,2+1\} = 4$
+		\item[\underline{$j=9$}:] $r_3^1 = \max\{r_3^1, r_4^1 + 1\} = \max\{0,3+1\} = 4$
+		\item[\underline{$j=10$}:] $r_3^1 = \max\{r_3^1, r_5^1 + 1\} = \max\{4,2+1\} = 4$
+	\end{enumerate}
 
-\fbox{Итерация 2}
+	\bigskip
 
-\bigskip
+	Запишем результаты в таблицу:
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } 
+			\hline
+			$k$ & $r_k^0$ & $r_k^1$ \\ \hline
+			$1$ & $0$ & $0$ \\ \hline
+			$2$ & $0$ & $1$ \\ \hline
+			$3$ & $0$ & $4$ \\ \hline
+			$4$ & $0$ & $3$ \\ \hline
+			$5$ & $0$ & $2$ \\ \hline
+			$6$ & $0$ & $2$ \\ \hline
+			$7$ & $0$ & $4$ \\ \hline
+			$8$ & $0$ & $1$ \\ \hline
+		\end{tabular}
+	\end{table}
 
-Следуя алгоритму вычисляем $r^2_k$ используя табличный вид сети:
+	\item[\fbox{$i=2$}] Следуя алгоритму, вычисляем $r^2_k$, используя табличный вид сети:
 
-\begin{enumerate}[nosep]
-	\item $r_2^2 = max\{r_2^2, r_1^2 + 1\} = max\{0,0+1\} = 1$
-	\item $r_6^2 = max\{r_6^2, r_2^2 + 1\} = max\{2,1+1\} = 2$
-	\item $r_5^2 = max\{r_5^2, r_2^2 + 1\} = max\{2,1+1\} = 2$
-	\item $r_4^2 = max\{r_4^2, r_6^2 + 1\} = max\{3,2+1\} = 3$
-	\item $r_7^2 = max\{r_7^2, r_4^2 + 1\} = max\{4,3+1\} = 4$
-	\item $r_8^2 = max\{r_8^2, r_3^2 + 1\} = max\{1,4+1\} = 5$
-	\item $r_7^2 = max\{r_7^2, r_8^2 + 1\} = max\{4,5+1\} = 6$
-	\item $r_7^2 = max\{r_7^2, r_5^2 + 1\} = max\{6,3+1\} = 6$
-	\item $r_3^2 = max\{r_3^2, r_4^2 + 1\} = max\{4,3+1\} = 4$
-	\item $r_3^2 = max\{r_3^2, r_5^2 + 1\} = max\{4,2+1\} = 4$
-\end{enumerate}
+	\begin{enumerate}[nosep]
+		\item[\underline{$j=1$}:] $r_2^2 = \max\{r_2^2, r_1^2 + 1\} = \max\{0,0+1\} = 1$
+		\item[\underline{$j=2$}:] $r_6^2 = \max\{r_6^2, r_2^2 + 1\} = \max\{2,1+1\} = 2$
+		\item[\underline{$j=3$}:] $r_5^2 = \max\{r_5^2, r_2^2 + 1\} = \max\{2,1+1\} = 2$
+		\item[\underline{$j=4$}:] $r_4^2 = \max\{r_4^2, r_6^2 + 1\} = \max\{3,2+1\} = 3$
+		\item[\underline{$j=5$}:] $r_7^2 = \max\{r_7^2, r_4^2 + 1\} = \max\{4,3+1\} = 4$
+		\item[\underline{$j=6$}:] $r_8^2 = \max\{r_8^2, r_3^2 + 1\} = \max\{1,4+1\} = 5$
+		\item[\underline{$j=7$}:] $r_7^2 = \max\{r_7^2, r_8^2 + 1\} = \max\{4,5+1\} = 6$
+		\item[\underline{$j=8$}:] $r_7^2 = \max\{r_7^2, r_5^2 + 1\} = \max\{6,3+1\} = 6$
+		\item[\underline{$j=9$}:] $r_3^2 = \max\{r_3^2, r_4^2 + 1\} = \max\{4,3+1\} = 4$
+		\item[\underline{$j=10$}:] $r_3^2 = \max\{r_3^2, r_5^2 + 1\} = \max\{4,2+1\} = 4$
+	\end{enumerate}
 
-Заносим результаты в таблицу:
+	\bigskip
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | c | c |} 
-		\hline
-		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ \\ \hline
-		$1$ & $0$ & $0$ & $0$ \\ \hline
-		$2$ & $0$ & $1$ & $1$ \\ \hline
-		$3$ & $0$ & $4$ & $4$ \\ \hline
-		$4$ & $0$ & $3$ & $3$ \\ \hline
-		$5$ & $0$ & $2$ & $2$ \\ \hline
-		$6$ & $0$ & $2$ & $2$ \\ \hline
-		$7$ & $0$ & $4$ & $6$ \\ \hline
-		$8$ & $0$ & $1$ & $5$ \\ \hline
-	\end{tabular}
-\end{table}
+	Запишем результаты в таблицу:
 
-\fbox{Итерация 3}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c |} 
+			\hline
+			$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ \\ \hline
+			$1$ & $0$ & $0$ & $0$ \\ \hline
+			$2$ & $0$ & $1$ & $1$ \\ \hline
+			$3$ & $0$ & $4$ & $4$ \\ \hline
+			$4$ & $0$ & $3$ & $3$ \\ \hline
+			$5$ & $0$ & $2$ & $2$ \\ \hline
+			$6$ & $0$ & $2$ & $2$ \\ \hline
+			$7$ & $0$ & $4$ & $6$ \\ \hline
+			$8$ & $0$ & $1$ & $5$ \\ \hline
+		\end{tabular}
+	\end{table}
 
-\bigskip
+	\item[\fbox{$i=3$}] Следуя алгоритму, вычисляем $r^3_k$, используя табличный вид сети:
 
-Следуя алгоритму вычисляем $r^3_k$ используя табличный вид сети:
+	\begin{enumerate}[nosep]
+		\item[\underline{$j=1$}:] $r_2^3 = \max\{r_2^3, r_1^3 + 1\} = \max\{0,0+1\} = 1$
+		\item[\underline{$j=2$}:] $r_6^3 = \max\{r_6^3, r_2^3 + 1\} = \max\{2,1+1\} = 2$
+		\item[\underline{$j=3$}:] $r_5^3 = \max\{r_5^3, r_2^3 + 1\} = \max\{2,1+1\} = 2$
+		\item[\underline{$j=4$}:] $r_4^3 = \max\{r_4^3, r_6^3 + 1\} = \max\{3,2+1\} = 3$
+		\item[\underline{$j=5$}:] $r_7^3 = \max\{r_7^3, r_4^3 + 1\} = \max\{6,3+1\} = 6$
+		\item[\underline{$j=6$}:] $r_8^3 = \max\{r_8^3, r_3^3 + 1\} = \max\{5,4+1\} = 5$
+		\item[\underline{$j=7$}:] $r_7^3 = \max\{r_7^3, r_8^3 + 1\} = \max\{6,5+1\} = 6$
+		\item[\underline{$j=8$}:] $r_7^3 = \max\{r_7^3, r_5^3 + 1\} = \max\{6,2+1\} = 6$
+		\item[\underline{$j=9$}:] $r_3^3 = \max\{r_3^3, r_4^3 + 1\} = \max\{4,3+1\} = 4$
+		\item[\underline{$j=10$}:] $r_3^3 = \max\{r_3^3, r_5^3 + 1\} = \max\{4,2+1\} = 4$
+	\end{enumerate}
 
-\begin{enumerate}[nosep]
-	\item $r_2^3 = max\{r_2^3, r_1^3 + 1\} = max\{0,0+1\} = 1$
-	\item $r_6^3 = max\{r_6^3, r_2^3 + 1\} = max\{2,1+1\} = 2$
-	\item $r_5^3 = max\{r_5^3, r_2^3 + 1\} = max\{2,1+1\} = 2$
-	\item $r_4^3 = max\{r_4^3, r_6^3 + 1\} = max\{3,2+1\} = 3$
-	\item $r_7^3 = max\{r_7^3, r_4^3 + 1\} = max\{6,3+1\} = 6$
-	\item $r_8^3 = max\{r_8^3, r_3^3 + 1\} = max\{5,4+1\} = 5$
-	\item $r_7^3 = max\{r_7^3, r_8^3 + 1\} = max\{6,5+1\} = 6$
-	\item $r_7^3 = max\{r_7^3, r_5^3 + 1\} = max\{6,2+1\} = 6$
-	\item $r_3^3 = max\{r_3^3, r_4^3 + 1\} = max\{4,3+1\} = 4$
-	\item $r_3^3 = max\{r_3^3, r_5^3 + 1\} = max\{4,2+1\} = 4$
-\end{enumerate}
+	\bigskip
 
-Заносим результаты в таблицу:
+	Запишем результаты в таблицу:
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | c | c | c | } 
-		\hline
-		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ \\ \hline
-		$1$ & $0$ & $0$ & $0$ & $0$ \\ \hline
-		$2$ & $0$ & $1$ & $1$ & $1$ \\ \hline
-		$3$ & $0$ & $4$ & $4$ & $4$ \\ \hline
-		$4$ & $0$ & $3$ & $3$ & $3$ \\ \hline
-		$5$ & $0$ & $2$ & $2$ & $2$ \\ \hline
-		$6$ & $0$ & $2$ & $2$ & $2$ \\ \hline
-		$7$ & $0$ & $4$ & $6$ & $6$ \\ \hline
-		$8$ & $0$ & $1$ & $5$ & $5$ \\ \hline
-	\end{tabular}
-\end{table}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | } 
+			\hline
+			$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ \\ \hline
+			$1$ & $0$ & $0$ & $0$ & $0$ \\ \hline
+			$2$ & $0$ & $1$ & $1$ & $1$ \\ \hline
+			$3$ & $0$ & $4$ & $4$ & $4$ \\ \hline
+			$4$ & $0$ & $3$ & $3$ & $3$ \\ \hline
+			$5$ & $0$ & $2$ & $2$ & $2$ \\ \hline
+			$6$ & $0$ & $2$ & $2$ & $2$ \\ \hline
+			$7$ & $0$ & $4$ & $6$ & $6$ \\ \hline
+			$8$ & $0$ & $1$ & $5$ & $5$ \\ \hline
+		\end{tabular}
+	\end{table}
 
-Как видно $r_k^2 = r_k^3 \quad \forall k$, значит алгоритм окончен: в $r^3_k$ содержатся ранги вершин. Теперь нужно согласно им пронумеровать вершины графа.
+	Как видно $\forall k \; r_k^2 = r_k^3$, значит алгоритм окончен: в столбце $r^3_k$ содержатся окончательные ранги вершин. Теперь нужно пронумеровать вершины графа согласно им (опять же по \hyperref[alg:ford]{алгоритму Форда}). Алгоритм будет следующий:
+	
+	\begin{enumerate}[nosep]
+		\item присваиваем вершине с рангом 0 значение 1;
+		\item смотрим имеются ли еще вершины с рангом последней пронумерованной, если есть, то даем ей следующий номер вершины и повторяем этот шаг, если нет, то приступаем к шагу 3, если же все вершины пронумерованы, то завершаем алгоритм;
+		\item берем следующий ранг по возрастанию, приступаем к шагу 2.
+	\end{enumerate}
+	
+	Этот алгоритм удобно выполнять, используя полученную таблицу и дописывая к ней столбец $H_k$, в котором будут итоговые номера вершин. Выполняя алгоритм, получаем следующую таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c |} 
+			\hline
+			$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ & $H_k$ \\ \hline
+			$1$ & $0$ & $0$ & $0$ & $0$ & $1$ \\ \hline
+			$2$ & $0$ & $1$ & $1$ & $1$ & $2$ \\ \hline
+			$3$ & $0$ & $4$ & $4$ & $4$ & $6$ \\ \hline
+			$4$ & $0$ & $3$ & $3$ & $3$ & $5$ \\ \hline
+			$5$ & $0$ & $2$ & $2$ & $2$ & $3$ \\ \hline
+			$6$ & $0$ & $2$ & $2$ & $2$ & $4$ \\ \hline
+			$7$ & $0$ & $4$ & $6$ & $6$ & $8$ \\ \hline
+			$8$ & $0$ & $1$ & $5$ & $5$ & $7$ \\ \hline
+		\end{tabular}
+	\end{table}
+\end{itemize}
 
-Для этого пользуемся следующим алгоритмом:
-
-\begin{enumerate}[nosep]
-	\item Присваиваем вершине с рангом 0 значение 1
-	\item Смотрим имеются ли еще вершины с рангом последней пронумерованной вершины. Если есть - даем ей следующий номер вершины и повторяем этот шаг. Если нет - приступаем к шагу 3. Если же все вершины пронумерованы: завершаем алгоритм.
-	\item Берем следующий ранг по возрастанию. Приступаем к шагу 2
-\end{enumerate}
-
-\bigskip
-
-Удобно делать этот алгорим используя таблицу, которую мы получили: дописываем к ней колонку $H_k$ где будут номера вершин. Выполняя алгоритм нумерации получаем следующую таблицу.
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{ | c | c | c | c | c | c |} 
-		\hline
-		$k$ & $r_k^0$ & $r_k^1$ & $r_k^2$ & $r_k^3$ & $H_k$ \\ \hline
-		$1$ & $0$ & $0$ & $0$ & $0$ & $1$ \\ \hline
-		$2$ & $0$ & $1$ & $1$ & $1$ & $2$ \\ \hline
-		$3$ & $0$ & $4$ & $4$ & $4$ & $6$ \\ \hline
-		$4$ & $0$ & $3$ & $3$ & $3$ & $5$ \\ \hline
-		$5$ & $0$ & $2$ & $2$ & $2$ & $3$ \\ \hline
-		$6$ & $0$ & $2$ & $2$ & $2$ & $4$ \\ \hline
-		$7$ & $0$ & $4$ & $6$ & $6$ & $8$ \\ \hline
-		$8$ & $0$ & $1$ & $5$ & $5$ & $7$ \\ \hline
-	\end{tabular}
-\end{table}
-
-Используя эти данные перенумеруем вершины сети (по факту мы заменяем старый номер $k$ на $H_k$).
+Используя эти данные перенумеруем вершины сети (заменим старый номер вершины $k$ на $H_k$).
 
 \begin{figure}[H]
 	\centering	
@@ -781,15 +775,14 @@
 	\end{tikzpicture}
 \end{figure}
 
-\subsection{Проект вычисления математического выражения}\label{proj:math_expr_calc_project}
+\subsection{Проект вычисления математического выражения}
 
-\problem[Проект вычисления математического выражения]
+\project[вычисления математического выражения]\label{proj:math_expr_calc_project}
 
-Построить сетевую модель проекта вычисления значения выражения
+\textbf{Исходные данные}
+Требуется для заданных величин $a, b$ построить сетевую модель проекта вычисления значения выражения
 
 \[\boxed{\frac{\sqrt{ab}(a + b)^2}{\sqrt{a + b}(a + ab)}}\]
-
-для заданных величин $a, b$
 
 \bigskip
 
@@ -799,7 +792,7 @@
 	\centering
 	\begin{tabular}{ | c | c | c | } 
 		\hline
-		j & работа & следующие работы \\\hline
+		j & описание работы & следующие работы \\\hline
 		$1$ & $ab$ & $\{4,5\}$ \\\hline
 		$2$ & $a+b$ & $\{3, 6\}$ \\\hline
 		$3$ & $(a+b)^2$ & $\{7\}$ \\\hline
@@ -816,88 +809,91 @@
 
 \textbf{Построение сетевой модели}
 
-\fbox{Шаги 1,2} $\,$ Построение вершин и дуг для каждой работы, обозначение подчиненностей, добавление начальной и конечной вершин.
+\begin{itemize}[nosep]
+	\item[\fbox{Шаги 1, 2}] Построение вершин и дуг для каждой работы, обозначение подчиненностей, добавление начальной и конечной вершин.
 
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (s) at (-3.5,-2.5) {};
-		\node[vertex] (1) at (-3,-1) {};
-		\node[vertex] (2) at (-2,-1) {};
-		\node[vertex] (3) at (-3,-4) {};
-		\node[vertex] (4) at (-2,-4) {};
-		\node[vertex] (5) at (-1,-3) {};
-		\node[vertex] (6) at (0,-3) {};
-		\node[vertex] (7) at (-1,0) {};
-		\node[vertex] (8) at (0, 0) {};
-		\node[vertex] (9) at (-1,-2) {};
-		\node[vertex] (10) at (0, -2) {};
-		\node[vertex] (11) at (-1,-5) {};
-		\node[vertex] (12) at (0, -5) {};
-		\node[vertex] (13) at (1,-1) {};
-		\node[vertex] (14) at (2,-1) {};
-		\node[vertex] (15) at (1,-4) {};
-		\node[vertex] (16) at (2,-4) {};
-		\node[vertex] (17) at (3,-2.5) {};
-		\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (18) at (4,-2.5) {};
-		
-		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
-		\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
-		\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
-		\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
-		\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
-		\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
-		\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
-		\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
-		\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
-		\draw[->, edge] (s) -- node {} (1);
-		\draw[->, edge] (s) -- node {} (3);
-		
-		\draw[->, edge, dashed] (2) -- node {} (7);
-		\draw[->, edge, dashed] (2) -- node {} (9);
-		\draw[->, edge, dashed] (4) -- node {} (5);
-		\draw[->, edge, dashed] (4) -- node {} (11);
-		\draw[->, edge, dashed] (12) -- node {} (15);
-		\draw[->, edge, dashed] (6) -- node {} (13);
-		\draw[->, edge, dashed] (8) -- node {} (13);
-		\draw[->, edge, dashed] (10) -- node {} (15);
-		\draw[->, edge, dashed] (14) -- node {} (17);
-		\draw[->, edge, dashed] (16) -- node {} (17);
-		
-	\end{tikzpicture}
-\end{figure}
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex, label=left:\textcolor{blue}{$s$}, fill=blue] (s) at (-3.5,-2.5) {};
+			\node[vertex] (1) at (-3,-1) {};
+			\node[vertex] (2) at (-2,-1) {};
+			\node[vertex] (3) at (-3,-4) {};
+			\node[vertex] (4) at (-2,-4) {};
+			\node[vertex] (5) at (-1,-3) {};
+			\node[vertex] (6) at (0,-3) {};
+			\node[vertex] (7) at (-1,0) {};
+			\node[vertex] (8) at (0, 0) {};
+			\node[vertex] (9) at (-1,-2) {};
+			\node[vertex] (10) at (0, -2) {};
+			\node[vertex] (11) at (-1,-5) {};
+			\node[vertex] (12) at (0, -5) {};
+			\node[vertex] (13) at (1,-1) {};
+			\node[vertex] (14) at (2,-1) {};
+			\node[vertex] (15) at (1,-4) {};
+			\node[vertex] (16) at (2,-4) {};
+			\node[vertex] (17) at (3,-2.5) {};
+			\node[vertex, label=right:\textcolor{blue}{$t$}, fill=blue] (18) at (4,-2.5) {};
+			
+			
+			\draw[->, edge] (1) -- node[above] {\squared{1}} (2);
+			\draw[->, edge] (3) -- node[above] {\squared{2}} (4);
+			\draw[->, edge] (5) -- node[above] {\squared{3}} (6);
+			\draw[->, edge] (7) -- node[above] {\squared{4}} (8);
+			\draw[->, edge] (9) -- node[above] {\squared{5}} (10);
+			\draw[->, edge] (11) -- node[above] {\squared{6}} (12);
+			\draw[->, edge] (13) -- node[above] {\squared{7}} (14);
+			\draw[->, edge] (15) -- node[above] {\squared{8}} (16);
+			\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
+			\draw[->, edge] (s) -- node {} (1);
+			\draw[->, edge] (s) -- node {} (3);
+			
+			\draw[->, edge, dashed] (2) -- node {} (7);
+			\draw[->, edge, dashed] (2) -- node {} (9);
+			\draw[->, edge, dashed] (4) -- node {} (5);
+			\draw[->, edge, dashed] (4) -- node {} (11);
+			\draw[->, edge, dashed] (12) -- node {} (15);
+			\draw[->, edge, dashed] (6) -- node {} (13);
+			\draw[->, edge, dashed] (8) -- node {} (13);
+			\draw[->, edge, dashed] (10) -- node {} (15);
+			\draw[->, edge, dashed] (14) -- node {} (17);
+			\draw[->, edge, dashed] (16) -- node {} (17);
+			
+		\end{tikzpicture}
+	\end{figure}
 
-\fbox{Шаги 3,4} $\,$ Убираем фиктивные дуги и нумеруем вершины
+	\item[\fbox{Шаги 3,4}] Удаление фиктивных дуги и нумерация вершин
 
-\begin{figure}[H]
-	\centering	
-	\begin{tikzpicture}[scale=2.2]
-		\node[vertex, label={\circled{1}}, fill=blue] (s) at (-3.5,-2.5) {};
-		\node[vertex, label={\circled{2}}] (2) at (-2,-1) {};
-		\node[vertex, label={\circled{3}}] (4) at (-2,-4) {};
-		\node[vertex, label={\circled{5}}] (13) at (1,-1) {};
-		\node[vertex, label={\circled{4}}] (15) at (1,-4) {};
-		\node[vertex, label={\circled{6}}] (17) at (3,-2.5) {};
-		\node[vertex, label={\circled{7}}, fill=blue] (18) at (4,-2.5) {};
-		
-		
-		\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} (2);
-		\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} (4);
-		\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} (13);
-		\draw[->, edge] (2) -- node[above] {\squared{4}} (13);
-		\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} (15);
-		\draw[->, edge] (4) -- node[above] {\squared{6}} (15);
-		\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} (17);
-		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} (17);
-		\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
-		
-	\end{tikzpicture}
-\end{figure}
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[scale=2.2]
+			\node[vertex, label={\circled{1}}, fill=blue] (s) at (-3.5,-2.5) {};
+			\node[vertex, label={\circled{2}}] (2) at (-2,-1) {};
+			\node[vertex, label={\circled{3}}] (4) at (-2,-4) {};
+			\node[vertex, label={\circled{5}}] (13) at (1,-1) {};
+			\node[vertex, label={\circled{4}}] (15) at (1,-4) {};
+			\node[vertex, label={\circled{6}}] (17) at (3,-2.5) {};
+			\node[vertex, label={\circled{7}}, fill=blue] (18) at (4,-2.5) {};
+			
+			
+			\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} (2);
+			\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} (4);
+			\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} (13);
+			\draw[->, edge] (2) -- node[above] {\squared{4}} (13);
+			\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} (15);
+			\draw[->, edge] (4) -- node[above] {\squared{6}} (15);
+			\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} (17);
+			\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} (17);
+			\draw[->, edge] (17) -- node[above] {\squared{9}} (18);
+			
+		\end{tikzpicture}
+	\end{figure}
+	
+	Вершины данной сети нумеруются просто <<вручную>>, поэтому здесь нет нужды использовать \hyperref[alg:ford]{алгоритм Форда}.
 
-Данная сеть строится и нумеруется просто, поэтому здесь нет нужды использовать алгоритм Форда.
+\end{itemize}
 
-\section{Поиск максимальных путей}\label{alg:max_length_path_searching}
+\section{Поиск максимальных путей}\label{sec:max_length_path_searching}
 
 \definition
 
@@ -1134,7 +1130,7 @@ $f(1) = g(n)$.
 
 Мы уже говорили, что если работа критическая, то увеличивать её время нежелательно, так как увеличится время всего проекта. А если работа не критическая, то можно ли увеличить её время? И если можно, то насколько?
 
-\fact
+\fact\label{fact:max_delta_j}
 
 Пусть $\Delta_j$ --- увеличение времени работы $j$, тогда максимальное значение $\Delta_j$, которое не приведёт к увеличению времени проекта, вычисляется по формуле
 \[
@@ -1201,9 +1197,11 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 \Delta_j^{\max} = T_{k(j)}^{\text{П}} - T_{i(j)}^{\text{р}} - \tau_j.
 \]
 
-\section{Практика поиска максимального пути в сети}
+\section{Практика поиска максимальных путей}
 
 \subsection{Проект вычисления математического выражения}
+
+\problem[о времени вычисления математического выражения]\label{pr:math_expr_calc_time}
 
 Добавим в \hyperref[proj:math_expr_calc_project]{проект вычисления математического выражения} данные о единицах времени, необходимых на вычисление математических операций:
 
@@ -1211,7 +1209,7 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 	\centering
 	\begin{tabular}{ | c | c | } 
 		\hline
-		Операция & Количество единиц времени \\ \hline
+		Операция & Трудоёмкость \\ \hline
 		Сложение & $1$ \\ \hline
 		Умножение & $2$ \\ \hline
 		Деление & $4$ \\ \hline
@@ -1219,13 +1217,13 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 	\end{tabular}
 \end{table}
 
-Необходимо найти за какое наименьшее время может быть вычислено выражение, если число вычислителей не ограничено.
+\underline{Требуется}: найти наименьшее время, за которое можно вычислить выражение, если число вычислителей не ограничено; насколько можно увеличить время работ так, чтобы время выполнения проекта не увеличилось.
 
-\bigskip
+\solution
 
 \textbf{Постройка взвешенной сети}
 
-Мы уже построили сеть данного проекта, можно её дополнить, добавив веса ребрам исходя из таблицы работ и таблицы с данными о затрачиваемых единиц времени.
+Сеть для данного проекта уже построена, дополним её весами рёбер, исходя из таблицы выше.
 
 \begin{figure}[H]
 	\centering	
@@ -1238,29 +1236,27 @@ g\big(i(j)\big) + \tau_j + \Delta_j^{\max} + f\big(k(j)\big) = T,
 		\node[vertex, label={\circled{6}}] (17) at (3,-2.5) {};
 		\node[vertex, label={\circled{7}}, fill=blue] (18) at (4,-2.5) {};
 		
-		
-		\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} node[below] {2} (2);
-		\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} node[below] {1} (4);
-		\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} node[above=10mm, right=12mm] {2} (13);
-		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {6} (13);
-		\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} node[below=16mm, right=10mm] {1} (15);
-		\draw[->, edge] (4) -- node[above] {\squared{6}} node[below] {6} (15);
-		\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} node[below] {2} (17);
-		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} node[below] {2} (17);
-		\draw[->, edge] (17) -- node[above] {\squared{9}} node[below] {4} (18);
-		
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{1}} node[below] {$2$} (2);
+		\draw[->, edge] (s) -- node[above=2mm] {\squared{2}} node[below] {$1$} (4);
+		\draw[->, edge] (4) -- node[above=20mm, right=10mm] {\squared{3}} node[above=10mm, right=12mm] {$2$} (13);
+		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {$6$} (13);
+		\draw[->, edge] (2) -- node[below=7mm, right=10mm] {\squared{5}} node[below=16mm, right=10mm] {$1$} (15);
+		\draw[->, edge] (4) -- node[above] {\squared{6}} node[below] {$6$} (15);
+		\draw[->, edge] (13) -- node[above=2mm] {\squared{7}} node[below] {$2$} (17);
+		\draw[->, edge] (15) -- node[above=2mm] {\squared{8}} node[below] {$2$} (17);
+		\draw[->, edge] (17) -- node[above] {\squared{9}} node[below] {$4$} (18);	
 	\end{tikzpicture}
 \end{figure}
 
 \bigskip
 
-\textbf{Решение задачи}
+\textbf{Динамическое программирование}
 
-По факту решение данной задачи это максимальная длина пути из вершины 1 в вершину 7: $\textbf{критическое время}$. Решение подобных задач было разобрано в \hyperref[alg:max_length_path_searching]{главе 3.4: Поиск максимальных путей}.
+Для решения поставленной задачи необходимо найти максимальную длину пути из вершины $1$ в вершину $7$ (\textbf{критическое время}). Решение подобных задач было разобрано в разделе \hyperref[sec:max_length_path_searching]{Поиск максимальных путей}, поэтому сразу приступим к решению.
 
-$f(i)$ --- длина максимального пути из вершины $i$ в вершину $n$
+Пусть $f(i)$ --- длина максимального пути из вершины $i$ в вершину $n=7$.
 
-\[\boxed{f(i) = \max_{j: \; i(j) = i} \Big\{\tau_j + f\big(k(j)\big)\Big\}}\]
+\[\boxed{f(i) = \max_{j: \; i(j) = i} \Big\{\tau_j + f\big(k(j)\big)\Big\}}\tag{*}\]
 
 Во время решения будем заполнять следующую таблицу:
 
@@ -1279,15 +1275,20 @@ $f(i)$ --- длина максимального пути из вершины $i
 	\end{tabular}
 \end{table}
 
-где $j(i)$ --- номер дуги, с которой начинается максимально длинный путь из $i$ в $n$
+где $j(i)$ --- номер дуги, с которой начинается максимально длинный путь из $i$ в $n$.
 
-Будем заполнять таблицу начиная с $f(7)$ и проходясь по индексам вниз вплоть до $f(1)$, где находится наше решение.
-Для этого будем вычислять $f(i)$ выписывая в столбец разные $j$, считая для них $\tau_j + f(k(j))$ и обводя в кружок то значение, на котором достигается максимум.
+Будем заполнять таблицу, начиная с $f(7)$ и проходясь по индексам вниз вплоть до $f(1)$, где находится наше решение.
+Для этого будем вычислять $f(i)$, выписывая в столбец разные $j$, считая для них $\tau_j + f(k(j))$ и обводя в кружок то значение, на котором достигается максимум.
+
+\begin{note}
+	\textbf{Напоминание}: $i(j)$ --- вершина-начало дуги $j$, $k(j)$ --- вершина-конец дуги $j$.
+\end{note}
 
 \bigskip
 
+\textbf{Заполнение таблицы}
 \begin{enumerate}[nosep]
-	\item[\fbox{Шаг 1}] На первом шаге $n = 7$
+	\item[\fbox{$i=7$}]
 	
 	$f(7)$ --- длина максимально длинного пути из вершины 7 в вершину 7, очевидно что здесь нет никакого пути, значит $f(7) = 0$, а $j(7)$ не определено.
 	
@@ -1308,11 +1309,11 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 2}] $n = 6$
+	\item[\fbox{$i=6$}] Для вычисления $f(i)$ на этом и последующем шагах будем использовать (*).
 	
 	\[
 	f(6) = \begin{array}{c|l}
-		9 & \tau_9 + f(7) = 4 + 0 = \circled{4} \\
+		\underbrace{9}_{j} & \tau_9 + f(\underbrace{7}_{k(9)}) = 4 + 0 = \circled{4} \\
 	\end{array}
 	\]
 	
@@ -1333,11 +1334,11 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 3}] $n = 5$
+	\item[\fbox{$i=5$}]
 	
 	\[
 	f(5) = \begin{array}{c|l}
-		7 & \tau_9 + f(6) = 2 + 4 = \circled{6} \\
+		\underbrace{7}_{j} & \tau_9 + f(\underbrace{6}_{k(7)}) = 2 + 4 = \circled{6} \\
 	\end{array}
 	\]
 	
@@ -1358,11 +1359,11 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 4}] $n = 4$
+	\item[\fbox{$i=4$}]
 	
 	\[
 	f(4) = \begin{array}{c|l}
-		8 & \tau_8 + f(6) = 2 + 4 = \circled{6} \\
+		\underbrace{8}_{j} & \tau_8 + f(\underbrace{6}_{k(8)}) = 2 + 4 = \circled{6} \\
 	\end{array}
 	\]
 	
@@ -1383,12 +1384,12 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 5}] $n = 3$
+	\item[\fbox{$i=3$}]
 	
 	\[
 	f(3) = \begin{array}{c|l}
-		3 & \tau_3 + f(5) = 2 + 6 = 8 \\
-		6 & \tau_6 + f(4) = 6 + 6 = \circled{12} \\
+		3 & \tau_3 + f(\underbrace{5}_{k(3)}) = 2 + 6 = 8 \\
+		\underbrace{6}_{j} & \tau_6 + f(\underbrace{4}_{k(6)}) = 6 + 6 = \circled{12} \\
 	\end{array}
 	\]
 	
@@ -1409,12 +1410,12 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 6}] $n = 2$
+	\item[\fbox{$i=2$}]
 	
 	\[
 	f(2) = \begin{array}{c|l}
-		4 & \tau_4 + f(5) = 6 + 6 = \circled{12} \\
-		5 & \tau_5 + f(4) = 1 + 6 = 7 \\
+		4 & \tau_4 + f(\underbrace{5}_{k(4)}) = 6 + 6 = \circled{12} \\
+		\underbrace{5}_{j} & \tau_5 + f(\underbrace{4}_{k(5)}) = 1 + 6 = 7 \\
 	\end{array}
 	\]
 	
@@ -1435,12 +1436,12 @@ $f(i)$ --- длина максимального пути из вершины $i
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 7}] $n = 1$
+	\item[\fbox{$i=1$}]
 	
 	\[
 	f(1) = \begin{array}{c|l}
-		1 & \tau_1 + f(2) = 2 + 12 = \circled{14} \\
-		2 & \tau_2 + f(3) = 1 + 12 = 13 \\
+		1 & \tau_1 + f(\underbrace{2}_{k(1)}) = 2 + 12 = \circled{14} \\
+		\underbrace{2}_{j} & \tau_2 + f(\underbrace{3}_{k(2)}) = 1 + 12 = 13 \\
 	\end{array}
 	\]
 	
@@ -1465,13 +1466,13 @@ $f(i)$ --- длина максимального пути из вершины $i
 
 \bigskip
 
-\textbf{Определенние пути}
+\textbf{Определение пути}
 
-Мы заполнили таблицу, длина длиннейшего пути оказалась равна $f(1) = 14$. Теперь по таблице вычислим этот путь.
+Мы заполнили таблицу, длина максимального пути оказалась равна $f(1) = 14$. Теперь по таблице вычислим этот путь.
 
-Для этого рассматриваем столбец $j(i)$ --- как помним это дуги, с которых начинается максимальный путь для $f(i)$.
+Для этого рассмотрим столбец $j(i)$ --- это, как помним, дуги, с которых начинается максимальный путь для $f(i)$.
 
-Путь начинается в $j(1)$. По таблице видно, что $j(1) = 1$, а дуга с номером 2 ведет в вершину 2, смотрим для неё $j(2)$ и идём так по вершинам, пока не достигнем вершины с номером 7. Графически этот путь выглядит так:
+Путь начинается в вершине $\circled{1}$, по таблице видно, что $j(1) = \squared{1}$, а дуга с номером $\squared{1}$ ведет в вершину $\circled{2}$, смотрим для неё $j(2)$ и идём так по вершинам, пока не достигнем вершины с номером $\circled{7}$. Графически этот путь выглядит так:
 
 \begin{figure}[H]
 	\centering	
@@ -1479,48 +1480,47 @@ $f(i)$ --- длина максимального пути из вершины $i
 		vertex/.style={circle, draw, minimum size=1cm, font=\large},
 		scale=2.2
 		]
-		\node[vertex] (1) at (0, 0) {1};
-		\node[vertex] (2) at (1, 0) {2};
-		\node[vertex] (3) at (2, 0) {5};
-		\node[vertex] (4) at (3, 0) {6};
-		\node[vertex] (5) at (4, 0) {7};
+		\node[vertex] (1) at (0, 0) {$1$};
+		\node[vertex] (2) at (1, 0) {$2$};
+		\node[vertex] (3) at (2, 0) {$5$};
+		\node[vertex] (4) at (3, 0) {$6$};
+		\node[vertex] (5) at (4, 0) {$7$};
 		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {2} (2);
-		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {6} (3);
-		\draw[->, edge] (3) -- node[above] {\squared{7}} node[below] {2} (4);
-		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {4} (5);
+		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {$2$} (2);
+		\draw[->, edge] (2) -- node[above] {\squared{4}} node[below] {$6$} (3);
+		\draw[->, edge] (3) -- node[above] {\squared{7}} node[below] {$2$} (4);
+		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {$4$} (5);
 		
 	\end{tikzpicture}
-	\caption{Путь максимальной длины из вершины 1 в вершину 7. Сверху дуг --- номер дуги в сети, снизу --- её вес}
+	\caption{Путь максимальной длины из вершины $1$ в вершину $7$. Сверху дуг --- номер дуги в сети, снизу --- её вес}
 \end{figure}
-
-Как видно этот путь не содержит вершины $3, 4$.
 
 \bigskip
 
 \textbf{Вычисление резерва времени выполнения работы}
 
-Вычислим резерв времени выполнения работы 3 (на сколько максимально можно увеличить время этой работы, чтобы общее время не увеличилось).
+Можно заметить, что максимальный (критический) путь не содержит дугу $3$. Для примера вычислим резерв времени выполнения работы $3$, то есть на сколько максимально можно увеличить время этой работы, чтобы общее время не увеличилось. По \hyperref[fact:max_delta_j]{утверждению}
 
 \[
-\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 14 - f(5) - g(3) - 2
+\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 14 - f(5) - g(3) - 2 = 5,
 \]
 
-$g(3)$ --- это максимальная длина пути от вершины 1 до вершины 3, по графу сразу видно что $g(3) = 1$.
+\begin{itemize}[nosep]
+	\item $T$ --- общее время проекта (длина максимального пути);
+	
+	\item $f(5)$ берётся взять из заполненной таблицы;
+	
+	\item $g(3)$ --- максимальная длина пути от вершины $1$ до вершины $3$, по графу можно определить, что $g(3) = 1$;
+	
+	\item $\tau_3$ --- вес (трудоёмкость) дуги $3$, берётся из условия задачи.
+\end{itemize}
 
-$T$ --- это критическое время.
 
-\bigskip
-
-Тогда:
-
-\[
-\Delta^{max}_3 = 14 - f(5) - g(3) -2 = 12 - 6 - 1 = 5
-\]
-
-\bigskip
+Таким образом, время выполнения работы $3$ (возведение $a+b$ в квадрат) можно увеличить на 5 единиц и время выполнения проекта не изменится.
 
 \subsection{Проект постройки дома}
+
+\problem[о времени постройки дома]
 
 Добавим в \hyperref[proj:house_building_project]{проект постройки дома} данные о единицах времени, необходимых на выполнение работ. Сделаем это сразу в табличный вид сети, добавив столбец с весами дуг:
 
@@ -1543,18 +1543,19 @@ $T$ --- это критическое время.
 	\end{tabular}
 \end{table}
 
-Используя данную таблицу так же можно вычислить критическое время проекта.
+\underline{Требуется}: вычислить критическое время проекта и резервы времени работ.
 
-Решение здесь фактически ничем не отличается от решения предыдущей задачи, поэтому сразу приступим к заполнению таблицы.
+\solution
+
+Решение данной задачи почти никак отличается от решения \hyperref[pr:math_expr_calc_time]{предыдущей} (лишь сетью), поэтому сразу приступим к заполнению таблицы.
 
 \bigskip
 
+\textbf{Заполнение таблицы}
 \begin{enumerate}[nosep]
-	\item[\fbox{Шаг 1}] На первом шаге $n = 8$
+	\item[\fbox{$i=8$}]
 	
-	$f(8) = 0$, $j(8)$ не определено.
-	
-	Запишем результат в таблицу:
+	$f(8) = 0$, $j(8)$ не определено. Запишем результат в таблицу:
 	
 	\begin{table}[H]
 		\centering
@@ -1572,7 +1573,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 2}] $n = 7$
+	\item[\fbox{$i=7$}]
 	
 	\[
 	f(7) = \begin{array}{c|l}
@@ -1598,7 +1599,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 3}] $n = 6$
+	\item[\fbox{$i=6$}]
 	
 	\[
 	f(6) = \begin{array}{c|l}
@@ -1624,7 +1625,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 4}] $n = 5$
+	\item[\fbox{$i=5$}]
 	
 	\[
 	f(5) = \begin{array}{c|l}
@@ -1651,7 +1652,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 5}] $n = 4$
+	\item[\fbox{$i=4$}]
 	
 	\[
 	f(4) = \begin{array}{c|l}
@@ -1677,7 +1678,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 6}] $n = 3$
+	\item[\fbox{$i=3$}]
 	
 	\[
 	f(3) = \begin{array}{c|l}
@@ -1704,7 +1705,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 7}] $n = 2$
+	\item[\fbox{$i=2$}]
 	
 	\[
 	f(2) = \begin{array}{c|l}
@@ -1731,7 +1732,7 @@ $T$ --- это критическое время.
 		\end{tabular}
 	\end{table}
 	
-	\item[\fbox{Шаг 8}] $n = 1$
+	\item[\fbox{$i=1$}]
 	
 	\[
 	f(1) = \begin{array}{c|l}
@@ -1761,7 +1762,9 @@ $T$ --- это критическое время.
 
 \bigskip
 
-\textbf{Определенние пути}
+\textbf{Определение пути}
+
+Метод определения пути по заполненной таблице аналогичен методу из предыдущей задачи.
 
 \begin{figure}[H]
 	\centering	
@@ -1769,34 +1772,35 @@ $T$ --- это критическое время.
 		vertex/.style={circle, draw, minimum size=1cm, font=\large},
 		scale=2.2
 		]
-		\node[vertex] (1) at (0, 0) {1};
-		\node[vertex] (2) at (1, 0) {2};
-		\node[vertex] (3) at (2, 0) {4};
-		\node[vertex] (4) at (3, 0) {5};
-		\node[vertex] (5) at (4, 0) {6};
-		\node[vertex] (6) at (5, 0) {7};
-		\node[vertex] (7) at (6, 0) {8};
+		\node[vertex] (1) at (0, 0) {$1$};
+		\node[vertex] (2) at (1, 0) {$2$};
+		\node[vertex] (3) at (2, 0) {$4$};
+		\node[vertex] (4) at (3, 0) {$5$};
+		\node[vertex] (5) at (4, 0) {$6$};
+		\node[vertex] (6) at (5, 0) {$7$};
+		\node[vertex] (7) at (6, 0) {$8$};
 		
-		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {0.5} (2);
-		\draw[->, edge] (2) -- node[above] {\squared{2}} node[below] {0.5} (3);
-		\draw[->, edge] (3) -- node[above] {\squared{4}} node[below] {4} (4);
-		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {0} (5);
-		\draw[->, edge] (5) -- node[above] {\squared{6}} node[below] {2} (6);
-		\draw[->, edge] (6) -- node[above] {\squared{7}} node[below] {2} (7);
-		
+		\draw[->, edge] (1) -- node[above] {\squared{1}} node[below] {$0.5$} (2);
+		\draw[->, edge] (2) -- node[above] {\squared{2}} node[below] {$0.5$} (3);
+		\draw[->, edge] (3) -- node[above] {\squared{4}} node[below] {$4$} (4);
+		\draw[->, edge] (4) -- node[above] {\squared{9}} node[below] {$0$} (5);
+		\draw[->, edge] (5) -- node[above] {\squared{6}} node[below] {$2$} (6);
+		\draw[->, edge] (6) -- node[above] {\squared{7}} node[below] {$2$} (7);
 	\end{tikzpicture}
+	\caption{Путь максимальной длины из вершины $1$ в вершину $8$. Сверху дуг --- номер дуги в сети, снизу --- её вес}
 \end{figure}
 
 \bigskip
 
 \textbf{Вычисление резерва времени выполнения работы}
 
-Вычислим резерв времени выполнения работы 3
+Можно заметить, что максимальный путь не содержит дугу $3$. Для примера вычислим резерв времени выполнения работы, соответствующей этой дуге. Сделаем это аналогично тому, как мы делали в предыдущей задаче:
 
 \[
-\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 9 - f(3) - g(2) - 1 = 8 - 4 - 0.5 = 3.5 
+\Delta^{max}_3 = T - f(k(3)) - g(i(3)) - \tau_3 = 9 - f(3) - g(2) - 1 = 8 - 4 - 0.5 = 3.5,
 \]
 
+то есть время выполнения работы $3$ (<<прокладка наружных коммуникаций>>) можно увеличить на $3.5$ и время выполнения проекта не изменится.
 
 \section{Задача о максимальном потоке}
 
@@ -1862,7 +1866,7 @@ Z = \sum_{l \in S} \underbrace{\bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \
 	
 	\item[\fbox{2}] Величина $Z$ представляет собой сумму <<балансов>> для каждой вершины $l \in S$. Пусть $E(l)$ --- множество всех дуг, которые встречаются в <<балансе>> для вершины $l$. Заметим, что в $E(l)$ некоторые дуги встречаются два раза: и в $\sum x_{lk}$, и в $\sum {x_{il}}$.
 	
-	Рассмотрим некоторую дугу $(i, k) \in E(l)$, на рисунке 3.10 изображены возможные случаи взаимного расположения её вершин.
+	Рассмотрим некоторую дугу $(i, k) \in E(l)$, на \hyperref[fig:ik_placement]{рисунке} изображены возможные случаи взаимного расположения её вершин.
 	
 	\begin{figure}[H]
 		\centering
@@ -1915,7 +1919,7 @@ Z = \sum_{l \in S} \underbrace{\bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \
 			\end{figure}
 		\end{subfigure}
 		\caption{Возможные случаи взаимного расположения вершин $i$ и $k$}
-		\label{fig:subfigures}
+		\label{fig:ik_placement}
 	\end{figure}
 	
 	Если $(i, k)$ относится к первому случаю, то её вклад в <<баланс>> через $\sum x_{lk}$ будет нивелировать её вклад в <<баланс>> через $\sum x_{il}$. Таким образом 
