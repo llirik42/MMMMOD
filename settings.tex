@@ -1,27 +1,19 @@
 \usepackage[T1, T2A]{fontenc}
 \usepackage[fontsize=12pt]{fontsize}
 \usepackage{anyfontsize}
-\usepackage[english, russian]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{hyperref}
-\usepackage{sectsty}
+
+\usepackage[english, russian]{babel}
+
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{physics}
-\usepackage{titlesec}
-\usepackage{indentfirst}
+
 \usepackage{pgfplots}
-\usepackage{enumitem}
-\usepackage{ulem}
-\usepackage{fancyhdr}
-\usepackage{float}
-\usepackage[most]{tcolorbox}
-\usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{svg}
-\usepackage[nameinlink]{cleveref}
 \usepackage{subcaption}
 
 \usetikzlibrary{arrows.meta}
@@ -34,6 +26,19 @@
 
 \definecolor{darkblue}{rgb}{0,0,0.5}
 
+\usepackage{sectsty}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{ulem}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{tabularx}
+\usepackage{float}
+
+\usepackage{hyperref}
+\usepackage[nameinlink]{cleveref}
+
 \hypersetup{
 	colorlinks=true,
 	urlcolor=blue,
@@ -42,36 +47,26 @@
 
 \linespread{1.15}
 
-\renewcommand{\rmdefault}{cmr}
-\renewcommand{\sfdefault}{cmss}
-\renewcommand{\ttdefault}{cmtt}
 \renewcommand{\rmdefault}{cmss}
+\renewcommand{\sfdefault}{cmss}
 \renewcommand{\ttdefault}{cmss}
 
 \titleformat{\chapter}{\huge\bfseries}{\thechapter}{0.5em}{\huge}[\vspace{0ex}\titlerule]
 
 \titleformat{\section}
-{\normalfont\LARGE\bfseries}
-{\thesection}{0.5em}{\LARGE}
+	{\normalfont\LARGE\bfseries}
+	{\thesection}{0.5em}
+	{\LARGE}
 
 \titleformat{\subsection}
-{\normalfont\Large\bfseries}
-{\thesubsection}{0.5em}{\Large}
+	{\normalfont\Large\bfseries}
+	{\thesubsection}{0.5em}
+	{\Large}
 
 \fancyhead{}
 \fancyfoot[C]{\thepage}
 
-\renewcommand{\P}{\mathcal{P}}
-\newcommand{\Q}{\mathcal{Q}}
-\newcommand{\R}{\mathbb{R}}
-
-\newcommand{\maps}{\longmapsto}
-\newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt] (char) {$#1$};}}
-\newcommand*\squared[1]{\tikz[baseline=(char.base)]{\node[shape=rectangle,draw,inner sep=2pt] (char) {$#1$};}}
-\newcommand{\const}{\textit{const}}
-\renewcommand{\land}{\;\&\;}
-\newcommand{\definitionfont}[1]{\textit{#1}}
-\newcommand{\complexity}{\mathcal{O}}
+\input{commands.tex}
 
 \newtcolorbox{note}[1][]{
 	colback=cyan!5!white,
@@ -80,30 +75,32 @@
 	#1
 }
 
-\newcommand{\problemlength}[1]{\abs{#1}}
-
 \newtheoremstyle{mainstyle}
-{\topsep}
-{\topsep}
-{\normalfont}
-{0pt}
-{\large\bfseries}
-{\newline\null}
-{\parindent}
-{\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
+	{\topsep}
+	{\topsep}
+	{\normalfont}
+	{0pt}
+	{\large\bfseries}
+	{\newline\null}
+	{\parindent}
+	{\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
 
 \theoremstyle{mainstyle}
+
 \newtheorem*{definition}{Определение}
 \newtheorem*{notation}{Обозначение}
+\newtheorem*{remark}{Замечание}
+\newtheorem*{example}{Пример}
+
 \newtheorem*{unnumberedfact}{Утверждение}
 \newtheorem*{fact}{Утверждение}
+\newtheorem*{implication}{Следствие}
+
 \newtheorem*{prooof}{Доказательство}
-\newtheorem*{example}{Пример}
-\newtheorem*{remark}{Замечание}
 \newtheorem*{solution}{Решение}
 \newtheorem*{returntoproblem}{Возвращение к задаче}
+
 \newtheorem*{problem}{Задача}
-\newtheorem*{implication}{Следствие}
 \newtheorem*{algorithm}{Алгоритм}
 \newtheorem*{mathmodel}{Математическая модель}
 \newtheorem*{nstepprocess}{$N$-шаговый процесс}
