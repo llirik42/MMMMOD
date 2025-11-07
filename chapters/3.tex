@@ -1948,3 +1948,341 @@ Z = \sum_{l \in S} \underbrace{\bigg(\sum_{k:\;(l, k) \in J} x_{lk} - \sum_{i: \
 	v(x) \le B(S, \bar{S}).
 	\]
 \end{itemize}
+
+\section{Практика вычисления максимального потока}
+
+Приведена сеть
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, minimum size=1cm, font=\large},
+		scale=2.2
+		]
+		\node[vertex] (1) at (0, 0) {$1$};
+		\node[vertex] (2) at (1, 1) {$2$};
+		\node[vertex] (3) at (1, -1) {$3$};
+		\node[vertex] (4) at (3, 1) {$4$};
+		\node[vertex] (5) at (3, -1) {$5$};
+		
+		\draw[->, edge] (1) -- node[above=2mm, left=1mm] {\squared{1}} node[below=1mm, right=1mm] {$3$} (2);
+		\draw[->, edge] (1) -- node[below left] {\squared{3}} node[above right] {$5$} (3);
+		\draw[->, edge] (2) -- node[above] {\squared{2}} node[below] {$6$} (4);
+		\draw[->, edge] (3) -- node[below right] {\squared{5}} node[above left] {$2$} (4);
+		\draw[->, edge] (3) -- node[below] {\squared{4}} node[above] {$2$} (5);
+		\draw[->, edge] (4) -- node[right] {\squared{6}} node[left] {$4$} (5);	
+	\end{tikzpicture}
+\end{figure}
+
+Необходимо вычислить макисмальный поток в сети.
+
+\bigskip
+
+\textbf{Решение задачи}
+
+\bigskip
+
+Будем решать задачу с помощью алгоритма Форда-Фалкерсона.
+
+Для этого будем использовать следующую таблицу:
+	
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | } \hline
+		\diagbox{Вершина}{Итерация} & 1 \\ \hline
+		1 & $(-, \infty)$  \\ \hline
+		2 &  \\ \hline
+		3 &  \\ \hline
+		4 &  \\ \hline
+		5 &  \\ \hline
+		{Дуга} & \\ \hline
+		1 & $(3, 0)$ \\ \hline
+		2 & $(6, 0)$ \\ \hline
+		3 & $(5, 0)$ \\ \hline
+		4 & $(2, 0)$ \\ \hline
+		5 & $(2, 0)$ \\ \hline
+		6 & $(4, 0)$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Колонки будут соответствовать итерациям алгоритма Форда-Фалкерсона. Таблица предзаполнена значениями, чтобы начать первую итерацию (нулевая итерация соответствуюет установлению всех потоков в 0).
+
+Таблица имеет две секции, в первой из них находятся пары $(k, \varepsilon(i))$ - пометки для сооветствующих вершин.
+
+\remark{Поскольку вершина 1 начальная, то все её пометки будут иметь значение $(-, \infty)$.}
+
+\bigskip
+
+Во второй секции для каждой дуги в итерации записана пара $(b, x)$ --- пропускная способность и поток для текущей итерации.
+
+\bigskip
+
+\textbf{Заполнение таблицы}
+\begin{itemize}[nosep]
+	\item[\fbox{Шаг 1}] Используя таблицу ставим метки вершинам, пока не пометим вершину $n = 5$.
+	
+	\bigskip
+	
+	\begin{enumerate}[nosep]
+		\item[\underline{$i=2$}:] можно пометить из вершины с номером 1, $\varepsilon(+1) = \min(\infty, 3-0)=3$ $\Rightarrow$ метка: $(+1, 3)$
+		\item[\underline{$i=3$}:] можно пометить из вершины с номером 1, $\varepsilon(+1) = \min(0, 5-0)=5$ $\Rightarrow$ метка: $(+1, 5)$
+		\item[\underline{$i=4$}:] можно пометить из вершины с номером 2, $\varepsilon(+2) = \min(3, 6-0)=3$ $\Rightarrow$ метка: $(+2, 3)$
+		\item[\underline{$i=5$}:] можно пометить из вершины с номером 4, $\varepsilon(+4) = \min(3, 4-0)=3$ $\Rightarrow$ метка: $(+4, 3)$
+	\end{enumerate}
+	
+	Занесем эти данные в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			\diagbox{Вершина}{Итерация} & 1 \\ \hline
+			1 & $(-, \infty)$  \\ \hline
+			2 & $(+1, 3)$  \\ \hline
+			3 & $(+1, 5)$  \\ \hline
+			4 & $(+2, 3)$  \\ \hline
+			5 & $(+4, 3)$  \\ \hline
+			{Дуга} & \\ \hline
+			1 & $(3, 0)$ \\ \hline
+			2 & $(6, 0)$ \\ \hline
+			3 & $(5, 0)$ \\ \hline
+			4 & $(2, 0)$ \\ \hline
+			5 & $(2, 0)$ \\ \hline
+			6 & $(4, 0)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину 5 и $\varepsilon$ метки вершины 5 равна 3.
+	
+	\bigskip
+	
+	Используя метки восстанавливаем путь с максимальным потоком от вершины 5 до вершины 1 (первое значение метки --- это та вершина, откуда в эту вершину пришли, а знак --- направление дуги). Над дугами записываем значение на которое нужно будет увеличить значение потока соотвтетсующей дуги ($\varepsilon$ или -$\varepsilon$) в зависимости от направления.
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$2$};
+			\node[vertex] (3) at (2, 0) {$4$};
+			\node[vertex] (4) at (3, 0) {$5$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{1}} node[above] {$+3$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{2}} node[above] {$+3$} (3);
+			\draw[->, edge] (3) -- node[below] {\squared{6}} node[above] {$+3$} (4);
+		\end{tikzpicture}
+	\end{figure}
+	
+	Изменяем поток соответствующих дуг, записываем результат в таблицу (в следующую итерацию).
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$   \\ \hline
+			2 & $(+1, 3)$ &  \\ \hline
+			3 & $(+1, 5)$ &  \\ \hline
+			4 & $(+2, 3)$ &  \\ \hline
+			5 & $(+4, 3)$ &  \\ \hline
+			{Дуга} & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 2}] Используя таблицу ставим метки вершинам, пока не пометим вершину $n = 5$.
+	
+	\bigskip
+	
+	\begin{enumerate}[nosep]
+		\item[\underline{$i=2$}:] нельзя пометить из вершнины 1 (для дуги 1 не выполняется условие $b_{1,2} - x_{1,2} > 0$).
+		\item[\underline{$i=3$}:] можно пометить из вершины с номером 1, $\varepsilon(+1) = \min(\infty, 5-0)=5$ $\Rightarrow$ метка: $(+1, 5)$
+		\item[\underline{$i=4$}:] можно пометить из вершины с номером 3, $\varepsilon(+3) = \min(5, 2-0)=2$ $\Rightarrow$ метка: $(+3, 2)$
+		\item[\underline{$i=5$}:] можно пометить из вершины с номером 3, $\varepsilon(+3) = \min(5, 2-0)=2$ $\Rightarrow$ метка: $(+3, 2)$
+	\end{enumerate}
+	
+	Занесем эти данные в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$   \\ \hline
+			2 & $(+1, 3)$ &  \\ \hline
+			3 & $(+1, 5)$ & $(+1, 5)$  \\ \hline
+			4 & $(+2, 3)$ & $(+3, 2)$  \\ \hline
+			5 & $(+4, 3)$ & $(+3, 2)$  \\ \hline
+			{Дуга} & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ \\ \hline
+		\end{tabular}
+	\end{table}	
+		
+	Нам удалось пометить вершину 5 и $\varepsilon$ метки вершины 5 равна 2.
+	
+	\bigskip
+	
+		\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$3$};
+			\node[vertex] (3) at (2, 0) {$5$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{3}} node[above] {$+2$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{4}} node[above] {$+2$} (3);
+		\end{tikzpicture}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c |} \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 & 3 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$   \\ \hline
+			2 & $(+1, 3)$ & &  \\ \hline
+			3 & $(+1, 5)$ & $(+1, 5)$ &  \\ \hline
+			4 & $(+2, 3)$ & $(+3, 2)$ &  \\ \hline
+			5 & $(+4, 3)$ & $(+3, 2)$ &  \\ \hline
+			{Дуга} & & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ & $(5, 2)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ & $(2, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ & $(2, 0)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ & $(4, 3)$ \\ \hline
+		\end{tabular}
+	\end{table}	
+	
+	\item[\fbox{Шаг 3}] Используя таблицу ставим метки вершинам, пока не пометим вершину $n = 5$.
+	
+	\bigskip
+	
+	\begin{enumerate}[nosep]
+		\item[\underline{$i=2$}:] нельзя пометить из вершины 1.
+		\item[\underline{$i=3$}:] можно пометить из вершины с номером 1, $\varepsilon(+1) = \min(\infty, 5-2)=3$ $\Rightarrow$ метка: $(+1, 3)$
+		\item[\underline{$i=4$}:] можно пометить из вершины с номером 3, $\varepsilon(+3) = \min(3, 2-0)=2$ $\Rightarrow$ метка: $(+3, 2)$
+		\item[\underline{$i=5$}:] можно пометить из вершины с номером 4, $\varepsilon(+4) = \min(2, 4-3)=1$ $\Rightarrow$ метка: $(+4, 1)$
+	\end{enumerate}
+	
+	Занесем эти данные в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c |} \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 & 3 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$   \\ \hline
+			2 & $(+1, 3)$ & &  \\ \hline
+			3 & $(+1, 5)$ & $(+1, 5)$ & $(+1, 3)$  \\ \hline
+			4 & $(+2, 3)$ & $(+3, 2)$ & $(+3, 2)$  \\ \hline
+			5 & $(+4, 3)$ & $(+3, 2)$ & $(+4, 1)$  \\ \hline
+			{Дуга} & & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ & $(5, 2)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ & $(2, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ & $(2, 0)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ & $(4, 3)$ \\ \hline
+		\end{tabular}
+	\end{table}		
+	
+	Нам удалось пометить вершину 5 и $\varepsilon$ метки вершины 5 равна 1.
+	
+	\bigskip
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$3$};
+			\node[vertex] (3) at (2, 0) {$4$};
+			\node[vertex] (4) at (3, 0) {$5$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{3}} node[above] {$+1$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{5}} node[above] {$+1$} (3);
+			\draw[->, edge] (3) -- node[below] {\squared{6}} node[above] {$+1$} (4);
+		\end{tikzpicture}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | } \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 & 3 & 4 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$ \\ \hline
+			2 & $(+1, 3)$ & & &  \\ \hline
+			3 & $(+1, 5)$ & $(+1, 5)$ & $(+1, 3)$ & \\ \hline
+			4 & $(+2, 3)$ & $(+3, 2)$ & $(+3, 2)$ & \\ \hline
+			5 & $(+4, 3)$ & $(+3, 2)$ & $(+4, 1)$ & \\ \hline
+			{Дуга} & & & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ & $(3, 3)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ & $(6, 3)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ & $(5, 2)$ & $(5, 3)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ & $(2, 0)$ & $(2, 1)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ & $(4, 3)$ & $(4, 4)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 4}] Используя таблицу ставим метки вершинам, пока не пометим вершину $n = 5$.
+	
+	\bigskip
+	
+	\begin{enumerate}[nosep]
+		\item[\underline{$i=2$}:] нельзя пометить из вершины 1.
+		\item[\underline{$i=3$}:] можно пометить из вершины с номером 1, $\varepsilon(+1) = \min(\infty, 5-3)=2$ $\Rightarrow$ метка: $(+1, 2)$
+		\item[\underline{$i=4$}:] можно пометить из вершины с номером 3, $\varepsilon(+3) = \min(2, 2-1)=1$ $\Rightarrow$ метка: $(+3, 1)$
+		\item[\underline{$i=2$}:] можно пометить из вершины с номером 4, $\varepsilon(-4) = \min(1, 3)=1$ $\Rightarrow$ метка: $(-4, 1)$
+		\item[\underline{$i=5$}:] нельзя пометить ни из каких вершин (3, 4).
+	\end{enumerate}
+	
+	Занесем эти данные в таблицу:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | } \hline
+			\diagbox{Вершина}{Итерация} & 1 & 2 & 3 & 4 \\ \hline
+			1 & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$ & $(-, \infty)$ \\ \hline
+			2 & $(+1, 3)$ & & & $(-4, 1)$  \\ \hline
+			3 & $(+1, 5)$ & $(+1, 5)$ & $(+1, 3)$ & $(+1, 2)$ \\ \hline
+			4 & $(+2, 3)$ & $(+3, 2)$ & $(+3, 2)$ & $(+3, 1)$ \\ \hline
+			5 & $(+4, 3)$ & $(+3, 2)$ & $(+4, 1)$ & \\ \hline
+			{Дуга} & & & & \\ \hline
+			1 & $(3, 0)$ & $(3, 3)$ & $(3, 3)$ & $(3, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 3)$ & $(6, 3)$ & $(6, 3)$ \\ \hline
+			3 & $(5, 0)$ & $(5, 0)$ & $(5, 2)$ & $(5, 3)$ \\ \hline
+			4 & $(2, 0)$ & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 0)$ & $(2, 0)$ & $(2, 1)$ \\ \hline
+			6 & $(4, 0)$ & $(4, 3)$ & $(4, 3)$ & $(4, 4)$ \\ \hline
+		\end{tabular}
+	\end{table}	
+	
+	Нам не удалось пометить вершину 5. Итерации завершены.
+	
+\end{itemize}
+
+\bigskip
+
+Используя готовую таблицу, можно построить разбиение $S$ и $\bar{S}$. В $S$ помеченные и проверенные вершины, в $\bar{S}$ все остальные. Получаем:
+\[S = \big\{1, 2, 3, 4\big\}, \bar{S} = \big\{5\big\}\]
+
+Вычислим разрез: $B(S, \bar{S}) = b_{3,5} + b_{4,5} = 2 + 4 = 6$
+
+Максимальный поток: $v = x_{1,3} + x_{1,2} = 3 + 3 = 6$ (Значения для $x_{1,3}, x_{1,2}$ берутся из таблицы: смотрится значение потока в последней итерации для соответствующих дуг).
