@@ -2042,7 +2042,7 @@ v(x) = B(S, \bar{S}),
 	
 	\item по обратной дуге если $x_{ki} > 0$, при этом
 	\[
-	\varepsilon(i) = \min\big\{\varepsilon(k), x_ki\big\}
+	\varepsilon(i) = \min\big\{\varepsilon(k), x_{ki}\big\}
 	\]
 \end{itemize}
 
@@ -2203,53 +2203,53 @@ v(x) = B(S, \bar{S}),
 	\caption{Всевозможные случаи взаимного расположения дуг вершины $i$}
 \end{figure}
 
-В каждом случае <<балансы>> произвольной вершины $i$ до и после изменения потока совпадают (таб. 3.1, 3.2, 3.3, 3.4), значит ограничение (1) из определения потока продолжает выполняться, значит после каждого изменения на каждой итерации имеем корректный поток.
+В каждом случае <<балансы>> произвольной вершины $i$ до и после изменения потока совпадают (таб. 3.1, 3.2, 3.3, 3.4), значит ограничение (1) из определения потока продолжает выполняться, поэтому после каждого изменения на каждой итерации имеем корректный поток.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ | c | c | } 
 		\hline
-		Был & Стал \\\hline
+		Было & Стало \\\hline
 		$-x + y$ & $-(x + \varepsilon) + (y + \varepsilon) = -x + y$ \\\hline
 	\end{tabular}
-	\caption{Случай 1}
+	\caption{Выражение <<баланса>> для случая 1}
 \end{table}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ | c | c | } 
 		\hline
-		Был & Стал \\\hline
+		Было & Стало \\\hline
 		$-x - y$ & $-(x + \varepsilon) - (y - \varepsilon) = -x - y$ \\\hline
 	\end{tabular}
-	\caption{Случай 2}
+	\caption{Выражение <<баланса>> для случая 2}
 \end{table}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ | c | c | } 
 		\hline
-		Был & Стал \\\hline
+		Было & Стало \\\hline
 		$x - y$ & $(x - \varepsilon) - (y - \varepsilon) = x - y$ \\\hline
 	\end{tabular}
-	\caption{Случай 3}
+	\caption{Выражение <<баланса>> для случая 3}
 \end{table}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ | c | c | } 
 		\hline
-		Был & Стал \\\hline
+		Было & Стало \\\hline
 		$x + y$ & $(x - \varepsilon) + (y + \varepsilon) = x + y$ \\\hline
 	\end{tabular}
-	\caption{Случай 4}
+	\caption{Выражение <<баланса>> для случая 4}
 \end{table}
 
 \section{Практика вычисления максимального потока}
 
 \problem
 
-Найти максимальный поток в сети, изображённой на рисунке (возле каждой изображена её пропускная способность $b_{ik}$).
+Найти максимальный поток в сети, изображённой на рисунке (возле каждой дуги изображена её пропускная способность $b_{ik}$).
 
 \begin{figure}[H]
 	\centering	
