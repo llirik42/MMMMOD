@@ -2676,3 +2676,602 @@ S = \big\{1, 2, 3, 4\big\}, \quad \bar{S} = \big\{5\big\},
 \end{note}
 
 Видно, что $v(x) = B(S, \bar{S})$, поэтому полученный поток действительно является максимальным.
+
+\problem
+
+Найти максимальный поток в сети, изображённой на рисунке (возле каждой дуги изображена её пропускная способность $b_{ik}$).
+
+\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, minimum size=1cm, font=\large},
+		scale=2.2
+		]
+		\node[vertex] (1) at (0, 0) {$1$};
+		\node[vertex] (2) at (2, 2) {$2$};
+		\node[vertex] (3) at (4, 2) {$3$};
+		\node[vertex] (4) at (2, -2) {$4$};
+		\node[vertex] (5) at (4, -2) {$5$};
+		\node[vertex] (6) at (6, 0) {$6$};
+		
+		\draw[->, edge] (1) -- node[above=2mm, left=1mm] {\squared{1}} node[below=1mm, right=1mm] {$7$} (2);
+		\draw[->, edge] (2) -- node[above] {\squared{2}} node[below] {$6$} (3);
+		\draw[->, edge] (3) -- node[above right] {\squared{3}} node[below left] {$4$} (6);
+		
+		\draw[->, edge] (1) -- node[below left] {\squared{4}} node[above right] {$6$} (4);
+		\draw[->, edge] (4) -- node[below] {\squared{5}} node[above] {$2$} (5);
+		\draw[->, edge] (5) -- node[below right] {\squared{6}} node[above left] {$1$} (6);
+		
+		\draw[->, edge] (3) -- node[right] {\squared{7}} node[left] {$3$} (5);
+		\draw[->, edge] (4) -- node[below=1mm, right=3mm] {\squared{8}} node[above=6mm, right=3mm] {$9$} (6);
+		\draw[->, edge] (5) -- node[above=2mm, left=3mm] {\squared{9}} node[below=2mm, right=3mm] {$3$} (2);
+	\end{tikzpicture}
+	\caption{Сеть}
+\end{figure}
+
+\solution
+
+Будем решать задачу с помощью \hyperref[alg:ford_Fulkerson]{Алгоритма Форда-Фалкерсона}. Для этого будем использовать следующую таблицу:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | c | c | } \hline
+		\diagbox{Дуга}{Итерация} & 1 \\ \hline
+		1 & $(7, 0)$ \\ \hline
+		2 & $(6, 0)$ \\ \hline
+		3 & $(4, 0)$ \\ \hline
+		4 & $(6, 0)$ \\ \hline
+		5 & $(2, 0)$ \\ \hline
+		6 & $(1, 0)$ \\ \hline
+		7 & $(3, 0)$ \\ \hline
+		8 & $(9, 0)$ \\ \hline
+		9 & $(3, 0)$ \\ \hline
+	\end{tabular}
+\end{table}
+
+Отдельно таблицу для вершин вести не будем: для каждой итерации в конце процесса пометки будет приведена табличка с метками для текущей итерации.
+
+\bigskip
+
+\begin{itemize}[nosep]
+	\item[\fbox{Шаг 1}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=4$ из вершины $k=1$ по прямой дуге $j=4$:
+		\[
+		\varepsilon(4) = \min(\infty, 6 - 0)=5 \quad \Longrightarrow \quad (+1, 6)
+		\]
+		
+		\item Помечаем вершину $i=5$ из вершины $k=4$ по прямой дуге $j=5$:
+		\[
+		\varepsilon(5) = \min(6, 2 - 0)=2 \quad \Longrightarrow \quad (+4, 2)
+		\]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=5$ по прямой дуге $j=9$:
+		\[
+		\varepsilon(2) = \min(2, 3 - 0)=2 \quad \Longrightarrow \quad (+5, 2)
+		\]
+		
+		\item Помечаем вершину $i=3$ из вершины $k=2$ по прямой дуге $j=2$:
+		\[
+		\varepsilon(3) = \min(2, 6 - 0)=2 \quad \Longrightarrow \quad (+2, 2)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=3$ по прямой дуге $j=3$:
+		\[
+		\varepsilon(6) = \min(2, 4 - 0)=2 \quad \Longrightarrow \quad (+3, 2)
+		\]
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+5, 2)$ \\ \hline
+			3 & $(+2, 2)$ \\ \hline
+			4 & $(+1, 6)$ \\ \hline
+			5 & $(+4, 2)$ \\ \hline
+			6 & $(+3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 2$.
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$4$};
+			\node[vertex] (3) at (2, 0) {$5$};
+			\node[vertex] (4) at (3, 0) {$2$};
+			\node[vertex] (5) at (4, 0) {$3$};
+			\node[vertex] (6) at (5, 0) {$6$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{4}} node[above] {$+2$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{5}} node[above] {$+2$} (3);
+			\draw[->, edge] (3) -- node[below] {\squared{9}} node[above] {$+2$} (4);
+			\draw[->, edge] (4) -- node[below] {\squared{6}} node[above] {$+2$} (5);
+			\draw[->, edge] (5) -- node[below] {\squared{4}} node[above] {$+2$} (6);
+		\end{tikzpicture}
+		\caption{Путь для шага 1}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 2}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=1$ по прямой дуге $j=1$:
+		\[
+		\varepsilon(2) = \min(\infty, 7 - 0)=7 \quad \Longrightarrow \quad (+1, 7)
+		\]
+		
+		\item Помечаем вершину $i=3$ из вершины $k=2$ по прямой дуге $j=2$:
+		\[
+		\varepsilon(3) = \min(7, 6 - 2)=4 \quad \Longrightarrow \quad (+2, 4)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=3$ по прямой дуге $j=3$:
+		\[
+		\varepsilon(6) = \min(4, 4 - 2)=2 \quad \Longrightarrow \quad (+3, 2)
+		\]
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+1, 7)$ \\ \hline
+			3 & $(+2, 4)$ \\ \hline
+			4 &  \\ \hline
+			5 &  \\ \hline
+			6 & $(+3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 2$.
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$2$};
+			\node[vertex] (3) at (2, 0) {$3$};
+			\node[vertex] (4) at (3, 0) {$6$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{1}} node[above] {$+2$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{2}} node[above] {$+2$} (3);
+			\draw[->, edge] (3) -- node[below] {\squared{3}} node[above] {$+2$} (4);
+		\end{tikzpicture}
+		\caption{Путь для шага 2}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 & 3 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ & $(7, 2)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ & $(6, 4)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ & $(4, 4)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ & $(6, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ & $(1, 0)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ & $(3, 0)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 3}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=1$ по прямой дуге $j=1$:
+		\[
+		\varepsilon(2) = \min(\infty, 7 - 2)=5 \quad \Longrightarrow \quad (+1, 5)
+		\]
+		
+		\item Помечаем вершину $i=3$ из вершины $k=2$ по прямой дуге $j=2$:
+		\[
+		\varepsilon(3) = \min(5, 6 - 2)=2 \quad \Longrightarrow \quad (+2, 2)
+		\]
+		
+		\item Помечаем вершину $i=5$ из вершины $k=3$ по прямой дуге $j=7$:
+		\[
+		\varepsilon(5) = \min(2, 3 - 0)=2 \quad \Longrightarrow \quad (+3, 2)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=5$ по прямой дуге $j=6$:
+		\[
+		\varepsilon(6) = \min(2, 1 - 0)=1 \quad \Longrightarrow \quad (+5, 1)
+		\]
+		
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+1, 5)$ \\ \hline
+			3 & $(+2, 2)$ \\ \hline
+			4 &  \\ \hline
+			5 & $(+3, 2)$  \\ \hline
+			6 & $(+5, 1)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 1$.
+	
+		\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$2$};
+			\node[vertex] (3) at (2, 0) {$3$};
+			\node[vertex] (4) at (3, 0) {$5$};
+			\node[vertex] (5) at (4, 0) {$6$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{1}} node[above] {$+1$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{2}} node[above] {$+1$} (3);
+			\draw[->, edge] (3) -- node[below] {\squared{7}} node[above] {$+1$} (4);
+			\draw[->, edge] (4) -- node[below] {\squared{6}} node[above] {$+1$} (5);
+		\end{tikzpicture}
+		\caption{Путь для шага 3}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 & 3 & 4 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ & $(7, 2)$ & $(7, 3)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ & $(6, 4)$ & $(6, 5)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ & $(4, 4)$ & $(4, 4)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ & $(2, 2)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ & $(1, 0)$ & $(1, 1)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ & $(3, 0)$ & $(3, 1)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 4}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=1$ по прямой дуге $j=1$:
+		\[
+		\varepsilon(2) = \min(\infty, 7 - 3)=4 \quad \Longrightarrow \quad (+1, 4)
+		\]
+		
+		\item Помечаем вершину $i=3$ из вершины $k=2$ по прямой дуге $j=2$:
+		\[
+		\varepsilon(3) = \min(4, 6 - 5)=1 \quad \Longrightarrow \quad (+2, 1)
+		\]
+		
+		\item Помечаем вершину $i=5$ из вершины $k=3$ по прямой дуге $j=7$:
+		\[
+		\varepsilon(5) = \min(1, 3 - 1)=1 \quad \Longrightarrow \quad (+3, 1)
+		\]
+		
+		\item Помечаем вершину $i=4$ из вершины $k=5$ по обратной дуге $j=5$:
+		\[
+		\varepsilon(4) = \min(1, 2)=1 \quad \Longrightarrow \quad (-5, 1)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=4$ по прямой дуге $j=8$:
+		\[
+		\varepsilon(6) = \min(1, 9 - 0)=1 \quad \Longrightarrow \quad (+4, 1)
+		\]
+		
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+1, 4)$ \\ \hline
+			3 & $(+2, 1)$ \\ \hline
+			4 & $(-5, 1)$ \\ \hline
+			5 & $(+3, 1)$  \\ \hline
+			6 & $(+4, 1)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 1$.
+	
+	\begin{figure}[H]
+	\centering	
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, minimum size=1cm, font=\large},
+		scale=2.2
+		]
+		\node[vertex] (1) at (0, 0) {$1$};
+		\node[vertex] (2) at (1, 0) {$2$};
+		\node[vertex] (3) at (2, 0) {$3$};
+		\node[vertex] (4) at (3, 0) {$5$};
+		\node[vertex] (5) at (4, 0) {$4$};
+		\node[vertex] (6) at (5, 0) {$6$};
+		
+		\draw[->, edge] (1) -- node[below] {\squared{1}} node[above] {$+1$} (2);
+		\draw[->, edge] (2) -- node[below] {\squared{2}} node[above] {$+1$} (3);
+		\draw[->, edge] (3) -- node[below] {\squared{7}} node[above] {$+1$} (4);
+		\draw[->, edge] (5) -- node[below] {\squared{5}} node[above] {$-1$} (4);
+		\draw[->, edge] (5) -- node[below] {\squared{8}} node[above] {$+1$} (6);
+	\end{tikzpicture}
+	\caption{Путь для шага 4}
+\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 & 3 & 4 & 5 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ & $(7, 2)$ & $(7, 3)$ & $(7, 4)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ & $(6, 4)$ & $(6, 5)$ & $(6, 6)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ & $(2, 2)$ & $(2, 1)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ & $(1, 0)$ & $(1, 1)$ & $(1, 1)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ & $(3, 0)$ & $(3, 1)$ & $(3, 2)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 1)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 5}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=4$ из вершины $k=1$ по прямой дуге $j=4$:
+		\[
+		\varepsilon(4) = \min(\infty, 6 - 2)=4 \quad \Longrightarrow \quad (+1, 4)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=4$ по прямой дуге $j=8$:
+		\[
+		\varepsilon(6) = \min(4, 9 - 1)=4 \quad \Longrightarrow \quad (+4, 4)
+		\]
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 &  \\ \hline
+			3 &  \\ \hline
+			4 & $(+1, 4)$ \\ \hline
+			5 &  \\ \hline
+			6 & $(+4, 4)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 4$.
+	
+	\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$4$};
+			\node[vertex] (3) at (2, 0) {$6$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{4}} node[above] {$+4$} (2);
+			\draw[->, edge] (2) -- node[below] {\squared{8}} node[above] {$+4$} (3);
+		\end{tikzpicture}
+		\caption{Путь для шага 5}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ & $(7, 2)$ & $(7, 3)$ & $(7, 4)$ & $(7, 4)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ & $(6, 4)$ & $(6, 5)$ & $(6, 6)$ & $(6, 6)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ & $(6, 6)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ & $(2, 2)$ & $(2, 1)$ & $(2, 1)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ & $(1, 0)$ & $(1, 1)$ & $(1, 1)$ & $(1, 1)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ & $(3, 0)$ & $(3, 1)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 1)$ & $(9, 5)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 6}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=1$ по прямой дуге $j=1$:
+		\[
+		\varepsilon(2) = \min(\infty, 7 - 5)=2 \quad \Longrightarrow \quad (+1, 2)
+		\]
+		
+		\item Помечаем вершину $i=5$ из вершины $k=2$ по обратной дуге $j=9$:
+		\[
+		\varepsilon(5) = \min(2, 2)=2 \quad \Longrightarrow \quad (-2, 2)
+		\]
+		
+		\item Помечаем вершину $i=4$ из вершины $k=5$ по обратной дуге $j=5$:
+		\[
+		\varepsilon(4) = \min(2, 1)=1 \quad \Longrightarrow \quad (-5, 1)
+		\]
+		
+		\item Помечаем вершину $i=6$ из вершины $k=4$ по прямой дуге $j=8$:
+		\[
+		\varepsilon(6) = \min(1, 9 - 5)=1 \quad \Longrightarrow \quad (+4, 1)
+		\]
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+1, 3)$  \\ \hline
+			3 &  \\ \hline
+			4 & $(-5, 1)$ \\ \hline
+			5 & $(-2, 2)$  \\ \hline
+			6 & $(+4, 1)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам удалось пометить вершину $6$ и $\varepsilon = \varepsilon(6) = 1$.
+	
+		\begin{figure}[H]
+		\centering	
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, minimum size=1cm, font=\large},
+			scale=2.2
+			]
+			\node[vertex] (1) at (0, 0) {$1$};
+			\node[vertex] (2) at (1, 0) {$2$};
+			\node[vertex] (3) at (2, 0) {$5$};
+			\node[vertex] (4) at (3, 0) {$4$};
+			\node[vertex] (5) at (4, 0) {$6$};
+			
+			\draw[->, edge] (1) -- node[below] {\squared{1}} node[above] {$+1$} (2);
+			\draw[->, edge] (3) -- node[below] {\squared{9}} node[above] {$-1$} (2);
+			\draw[->, edge] (4) -- node[below] {\squared{5}} node[above] {$-1$} (3);
+			\draw[->, edge] (4) -- node[below] {\squared{8}} node[above] {$+1$} (5);
+		\end{tikzpicture}
+		\caption{Путь для шага 6}
+	\end{figure}
+	
+	Добавим значения к потокам и запишем результат в таблицу для следующей итерации:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | } \hline
+			\diagbox{Дуга}{Итерация} & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+			1 & $(7, 0)$ & $(7, 0)$ & $(7, 2)$ & $(7, 3)$ & $(7, 4)$ & $(7, 4)$ & $(7, 5)$ \\ \hline
+			2 & $(6, 0)$ & $(6, 2)$ & $(6, 4)$ & $(6, 5)$ & $(6, 6)$ & $(6, 6)$ & $(6, 6)$ \\ \hline
+			3 & $(4, 0)$ & $(4, 2)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ & $(4, 4)$ \\ \hline
+			4 & $(6, 0)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ & $(6, 2)$ & $(6, 6)$ & $(6, 6)$ \\ \hline
+			5 & $(2, 0)$ & $(2, 2)$ & $(2, 2)$ & $(2, 2)$ & $(2, 1)$ & $(2, 1)$ & $(2, 0)$ \\ \hline
+			6 & $(1, 0)$ & $(1, 0)$ & $(1, 0)$ & $(1, 1)$ & $(1, 1)$ & $(1, 1)$ & $(1, 1)$ \\ \hline
+			7 & $(3, 0)$ & $(3, 0)$ & $(3, 0)$ & $(3, 1)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ \\ \hline
+			8 & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 0)$ & $(9, 1)$ & $(9, 5)$ & $(9, 6)$ \\ \hline
+			9 & $(3, 0)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 2)$ & $(3, 1)$ \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\item[\fbox{Шаг 7}]
+	\begin{enumerate}[nosep]
+		\item[]
+		
+		\item Помечаем вершину $i=2$ из вершины $k=1$ по прямой дуге $j=1$:
+		\[
+		\varepsilon(2) = \min(\infty, 7 - 5)=2 \quad \Longrightarrow \quad (+1, 2)
+		\]
+		
+		\item Помечаем вершину $i=5$ из вершины $k=2$ по обратной дуге $j=9$:
+		\[
+		\varepsilon(5) = \min(2, 1)=1 \quad \Longrightarrow \quad (-2, 1)
+		\]
+		
+		\item Помечаем вершину $i=3$ из вершины $k=5$ по обратной дуге $j=7$:
+		\[
+		\varepsilon(3) = \min(1, 2)=1 \quad \Longrightarrow \quad (-5, 1)
+		\]
+		
+	\end{enumerate}
+	
+	Получаем метки:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ | c | c | } \hline
+			{Вершина} & {Метка} \\ \hline
+			1 & $(-, \infty)$ \\ \hline
+			2 & $(+1, 2)$  \\ \hline
+			3 & $(-5, 1)$  \\ \hline
+			4 & \\ \hline
+			5 & $(-2, 1)$  \\ \hline
+			6 &  \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	Нам не удалось пометить вершину $6$. Итерации окончены.
+\end{itemize}
+
+\bigskip
+
+\textbf{Построение разреза}
+
+Используя заполненную таблицу, построим разрез $(S, \bar{S})$ следующим образом: 
+\[
+S = \big\{1, 2, 3, 5\big\}, \quad \bar{S} = \big\{4, 6\big\},
+\]
+
+то есть $S$ --- помеченные на последней итерации вершины, $\bar{S}$ --- не помеченные.
+
+Вычислим пропускную способность разреза:
+\[
+\boxed{B(S, \bar{S}) = b_{(3,6)} + b_{(5,6)} + b_{(1,4)} = 4 + 1 + 6 = 11}.
+\]
+
+Вычислим итоговую величину потока $v(x)$ через <<баланс>> вершины $1$ на последней итерации:
+\[
+\boxed{v(x) = x_{(1,2)} + x_{(1,4)} = 5 + 6 = 11}.
+\]
+
+Видно, что $v(x) = B(S, \bar{S})$, поэтому полученный поток действительно является максимальным.
