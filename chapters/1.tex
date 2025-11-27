@@ -198,9 +198,11 @@ f_A\big(\problemlength{p}\big) = \underbrace{C}_{\const} \cdot \problemlength{p}
 
 \definitionfont{Задача линейного программирования} определяется следующим образом
 
-\[\sum_{j=1}^{n} c_j x_j \to \max_{(x_j)},\]
-\[\sum_{j=1}^{n}a_{ij} x_j \le b_i, \quad i = 1\dots m,\]
-\[x_j \in \{0, 1, 2, \dots\}, \quad j = 1\dots n.\]
+\begin{alignat*}{2}
+	& \sum_{j=1}^{n} c_j x_j \to \max_{(x_j)}, \\
+	& \sum_{j=1}^{n}a_{ij} x_j \le b_i, && i = 1\dots m, \\
+	& x_j \ge 0, && j = 1\dots n;		
+\end{alignat*}
 
 Распространённый частный случай: $x_j \in \{0, 1\}$.
 

@@ -24,6 +24,7 @@
 \usepackage{svg}
 \usepackage[nameinlink]{cleveref}
 \usepackage{subcaption}
+\usepackage{cancel}
 
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{calc}
@@ -48,6 +49,15 @@
 \renewcommand{\ttdefault}{cmtt}
 \renewcommand{\rmdefault}{cmss}
 \renewcommand{\ttdefault}{cmss}
+
+\newenvironment{linear}
+{
+	\setlength{\arraycolsep}{2pt}
+	\begin{array}
+	}
+	{
+	\end{array}
+}
 
 \titleformat{\chapter}{\huge\bfseries}{\thechapter}{0.5em}{\huge}[\vspace{0ex}\titlerule]
 
