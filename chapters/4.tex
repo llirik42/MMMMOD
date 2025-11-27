@@ -67,14 +67,30 @@ y(x) = \underbrace{-\frac{a}{b}}_{\tan \alpha}x + \frac{c}{b},
 			\addplot[domain=-1:5, samples=100, blue, thick]{-4/3 * x + 12/3};
 			\addlegendentry{$4x_1 + 3x_2 = 12$}
 			
+			\addplot[only marks, mark=* ,] coordinates {(15/7, 8/7)};
+			\node at (axis cs:15/7,8/7) [anchor=south east] {$O$};
+			
 			\addplot[domain=-1:5, samples=100, red, thick]{-2/5 * x + 10/5};
 			\addlegendentry{$2x_1 + 5x_2 = 10$}
 			
-			\fill[blue!30]  % цвет заливки
-			(0,0) -- (2,0) -- (3,1) -- (1,3) -- (-1,2) -- cycle;
+			\addplot[domain=-1:5, samples=100, thick]{-4/5 * x + 100/35};
+			\addlegendentry{$4x_1 + 5x_2 = 100/7$}
 			
-			\draw[thick, blue]  % обводка
-			(0,0) -- (2,0) -- (3,1) -- (1,3) -- (-1,2) -- cycle;
+			\addplot[domain=-1:5, samples=100, green, thick]{-4/5 * x + 20/5};
+			\addlegendentry{$4x_1 + 5x_2 = 20$}
+			
+			\addplot[domain=-1:5, samples=100, orange, thick]{-4/5 * x + 10/5};
+			\addlegendentry{$4x_1 + 5x_2 = 10$}
+			
+			
+			\addplot[pattern=north east lines]
+			coordinates {
+				(0,0)
+				(0,2)
+				(15/7,8/7)
+				(3,0)
+				(0,0)
+			};
 		\end{axis}
 	\end{tikzpicture}
 \end{figure}
