@@ -29,7 +29,7 @@
 
 \fact
 
-Уравнение $ax + by \stackrel{\ge}{\le} c$ определяет полуплоскость, точки которой лежат не выше (не ниже) прямой $ax + by = c$.
+Неравенство $ax + by \stackrel{\ge}{\le} c$ определяет полуплоскость, точки которой лежат не выше (не ниже) прямой $ax + by = c$.
 
 \fact
 
@@ -40,14 +40,6 @@ y(x) = \underbrace{-\frac{a}{b}}_{\tan \alpha}x + \frac{c}{b},
 
 где $\alpha$ --- угол между прямой и осью $OX$.
 
-\definition
-
-\definitionfont{Геометрический метод} заключается в представлении задачи на плоскости
-
-\begin{note}
-	Метод применяется, когда в задаче 2 переменные. Если переменных меньше, то задачу проще решить без геометрического метода, а если больше, то геометрический метод становится неудобен.
-\end{note}
-
 \example
 
 Решим с помощью геометрического метода следующую задачу
@@ -55,33 +47,21 @@ y(x) = \underbrace{-\frac{a}{b}}_{\tan \alpha}x + \frac{c}{b},
 \begin{linear}{crrrrl}
 	& 4x_1 & + & 5x_2 & \to & \max\limits_{(x_1, x_2)}, \\
 	& 4x_1 & + & 3x_2 & \le & 12, \\
-	& 2x_1 & + & 5x_2 & \le & 10. \\
+	& 2x_1 & + & 5x_2 & \le & 10, \\
 \end{linear}
 \]
 
-Изобразим на плоскости прямые, соответствующие ограничениям
+Изобразим на плоскости прямые, соответствующие ограничениям, точку их пересечения $O$ и множество допустимых решений (рис. 4.1).
+
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
-		\begin{axis}[axis lines=middle, xlabel={$x_1$}, ylabel={$x_2$}, grid=major]
-			\addplot[domain=-1:5, samples=100, blue, thick]{-4/3 * x + 12/3};
+		\begin{axis}[axis lines=middle, xlabel={$x_1$}, ylabel={$x_2$}, grid=major, width=0.8\textwidth, xmin=-1, xmax=6, ymin=-2, ymax=5]
+			\addplot[domain=-1:6, samples=2, blue, thick]{-4/3 * x + 12/3};
 			\addlegendentry{$4x_1 + 3x_2 = 12$}
 			
-			\addplot[only marks, mark=* ,] coordinates {(15/7, 8/7)};
-			\node at (axis cs:15/7,8/7) [anchor=south east] {$O$};
-			
-			\addplot[domain=-1:5, samples=100, red, thick]{-2/5 * x + 10/5};
+			\addplot[domain=-1:6, samples=2, red, thick]{-2/5 * x + 10/5};
 			\addlegendentry{$2x_1 + 5x_2 = 10$}
-			
-			\addplot[domain=-1:5, samples=100, thick]{-4/5 * x + 100/35};
-			\addlegendentry{$4x_1 + 5x_2 = 100/7$}
-			
-			\addplot[domain=-1:5, samples=100, green, thick]{-4/5 * x + 20/5};
-			\addlegendentry{$4x_1 + 5x_2 = 20$}
-			
-			\addplot[domain=-1:5, samples=100, orange, thick]{-4/5 * x + 10/5};
-			\addlegendentry{$4x_1 + 5x_2 = 10$}
-			
 			
 			\addplot[pattern=north east lines]
 			coordinates {
@@ -91,9 +71,142 @@ y(x) = \underbrace{-\frac{a}{b}}_{\tan \alpha}x + \frac{c}{b},
 				(3,0)
 				(0,0)
 			};
+			
+			\addplot[only marks, mark=* ,] coordinates {(15/7, 8/7)};
+			\node at (axis cs:15/7,8/7) [anchor=south west]{$O$};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{}
+\end{figure}
+
+То что заштрихованная на рисунке выше область являются областью допустимых значений следует из следующего:
+\begin{itemize}[nosep]
+	\item $4x_1 = 3x_2 \le 12$, значит допустимые решения должны лежать не выше прямой $4x_1 + 3x_2 = 12$;
+	
+	\item $2x_1 + 5x_2 \le 10$, значит допустимые решения должны лежать не выше прямой $2x_1 + 5x_2 = 10$;
+	
+	\item в задаче линейного программирования $x_j \ge 0, j = 1 \dots n$, поэтому $x_1, x_2 \ge 0$.
+\end{itemize}
+
+То есть нас интересуют точки плоскости, находящиеся в первой четверти и лежащие не выше прямых, соответствующих ограничениям.
+
+Целевой функции соответствует прямая $4x_1 + 5x_2 = c$, где $c$ --- неизвестное, которое нужно найти. Для примера нарисуем прямые при $c = 10$ и $c = 20$ (рис. 4.2).
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis lines=middle, xlabel={$x_1$}, ylabel={$x_2$}, grid=major, width=0.8\textwidth, xmin=-1, xmax=6, ymin=-2, ymax=5]
+			\addplot[domain=-1:6, samples=2, blue, thick]{-4/3 * x + 12/3};
+			\addlegendentry{$4x_1 + 3x_2 = 12$}
+				
+			\addplot[domain=0:6, samples=2, red, thick]{-2/5 * x + 10/5};
+			\addlegendentry{$2x_1 + 5x_2 = 10$}
+		
+			\addplot[domain=-1:6, samples=2, green, thick]{-4/5 * x + 20/5};
+			\addlegendentry{$4x_1 + 5x_2 = 20$}
+			
+			\addplot[domain=-1:6, samples=2, orange, thick]{-4/5 * x + 10/5};
+			\addlegendentry{$4x_1 + 5x_2 = 10$}
+				
+			\addplot[pattern=north east lines]
+			coordinates {
+				(0,0)
+				(0,2)
+				(15/7,8/7)
+				(3,0)
+				(0,0)
+			};
+			
+			\addplot[only marks, mark=* ,] coordinates {(15/7, 8/7)};
+			\node at (axis cs:15/7,8/7) [anchor=south west]{$O$};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{}
+\end{figure}
+
+Видно, что при $c = 20$ прямая целевой функции не пересекает множество допустимых решений, а при $c = 10$ --- пересекает.
+
+Ясно, что если брать $c > 20$, то прямая целевой функции будет отдаляться от области допустимых решений, поэтому нужно брать $c < 20$. Задача нахождения максимума означает, что нам нужно найти максимальное число $c'$ такое, что прямая $4x_1 + 5x_2 = c'$ пересекает множество допустимых решений.
+
+Ясно, что $c'$ соответствует прямой, которая пересекает точку $O$ (рис. 4.3).
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis lines=middle, xlabel={$x_1$}, ylabel={$x_2$}, grid=major, width=0.8\textwidth, xmin=-1, xmax=6, ymin=-2, ymax=5]
+			\addplot[domain=-1:6, samples=100, blue, thick]{-4/3 * x + 12/3};
+			\addlegendentry{$4x_1 + 3x_2 = 12$}
+			
+			\addplot[domain=0:6, samples=100, red, thick]{-2/5 * x + 10/5};
+			\addlegendentry{$2x_1 + 5x_2 = 10$}
+			
+			\addplot[domain=-1:6, samples=100, thick]{-4/5 * x + 100/35};
+			\addlegendentry{$4x_1 + 5x_2 = c'$}
+			
+			\addplot[domain=-1:6, samples=100, green, thick]{-4/5 * x + 20/5};
+			\addlegendentry{$4x_1 + 5x_2 = 20$}
+			
+			\addplot[domain=-1:6, samples=100, orange, thick]{-4/5 * x + 10/5};
+			\addlegendentry{$4x_1 + 5x_2 = 10$}
+			
+			\addplot[pattern=north east lines]
+			coordinates {
+				(0,0)
+				(0,2)
+				(15/7,8/7)
+				(3,0)
+				(0,0)
+			};
+			
+			\addplot[only marks, mark=* ,] coordinates {(15/7, 8/7)};
+			\node at (axis cs:15/7,8/7) [anchor=south west]{$O$};
 		\end{axis}
 	\end{tikzpicture}
 \end{figure}
+
+Найдём координаты точки $O$
+\begin{align*}
+	&\begin{cases}
+		4x_1 + 3x_2 = 12, \\
+		2x_1 + 5x_2 = 10; \quad \Big| \quad \cdot 2
+	\end{cases} \\
+	&\begin{cases}
+		4x_1 + 3x_2 = 12, \\
+		4x_1 + 10x_2 = 20;
+	\end{cases}
+\end{align*}
+
+\[
+\Downarrow
+\]
+\[
+7x_2 = 8,
+\]
+\[
+x_2 = \frac{8}{7};
+\]
+\[
+x_1 = \frac{10}{2} - \frac{5}{2}x_2 = 5 - \frac{20}{7} = \frac{15}{7}.
+\]
+
+Таким образом, точка $O$ имеет координаты $(15/7, 8/7)$. Найдём $c'$ из соображения, что прямая $4x_1 + 5x_2 = c'$ проходит через точку $O$
+\[
+4x_1 + 5x_2 = c',
+\]
+\[
+4 \cdot \frac{15}{7} + 5 \cdot \frac{8}{7} = c',
+\]
+\[
+c' = \frac{100}{7}.
+\]
+
+То есть прямая $4x_1 + 5x_2 = 100/7$ пересекает точку $O$, что соответствует максимальному значению целевой функции $4x_1 + 5x_2$.
+
+Таким образом, при исходных ограничениях
+
+\[
+\max_{(x_1, x_2)} \big(4x_1 + 5x_2\big) = \frac{100}{7}.
+\]
 
 \section{Теория двойственности}
 
