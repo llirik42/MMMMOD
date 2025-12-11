@@ -1228,7 +1228,7 @@ x_m = b_m + l_m(x_{m+1}, x_{m+2}, \dots, x_n),
 	
 	\item[\fbox{Шаг 2}] Текущее решение --- это
 	\[
-	x_1 = \frac{125}{12}, \quad x_2 = x_3 = 0, \quad x_4 = \frac{55}{12}, \quad y_1 = 0, \quad y_2 = \frac{455}{12}, \quad x_0 = \frac{1105}{12}.
+	x_1 = \frac{125}{12}, \quad x_2 = x_3 = 0, \quad x_4 = \frac{55}{12}, \quad y_1 = 0, \quad y_2 = \frac{455}{12}, \quad y_3 = 0, \quad x_0 = \frac{1105}{12}.
 	\]
 	
 	Вновь не все коэффициенты в выражении целевой функции отрицательны, в частности, коэффициент перед $x_3$. Добавим $x_3$ в базис и рассмотрим кандидатов на удаление из базиса
@@ -1541,5 +1541,378 @@ x_m = b_m + l_m(x_{m+1}, x_{m+2}, \dots, x_n),
 		\item каждую трубу длиной 6 м раскроить на 1 $\times$ 3.5 м и 1 $\times$ 2.5 м;
 		
 		\item суммарные затраты составят 176 рублей.
+	\end{itemize}
+\end{enumerate}
+
+\problem[раскроя 2]
+
+Рассмотрим еще одну задачу аналогичную предудущей, но решим её двумя методами: геометрическим и симплекс-методом.
+
+Требуется
+\begin{itemize}[nosep]
+	\item 20 труб по 6 м,
+	
+	\item 12 труб по 3.5 м.
+\end{itemize}
+
+\bigskip
+
+а покупать трубы можно
+
+\begin{itemize}[nosep]
+	\item длиной 13 м по 6 руб/шт,
+	
+	\item длиной 8 м по 4 руб/шт.
+\end{itemize}
+
+Необходимо закрыть потребность в трубах с минимальными затратами.
+
+\mathmodel
+
+Рассмотрим все варианты раскроя длинных труб на короткие.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{| c | c | c | } 
+		\hline
+		№ & 6 м & 3.5 м \\ 
+		\hline
+		1 & 2 & 0 \\\hline
+		2 & 1 & 2 \\\hline
+		3 & 0 & 3 \\\hline
+	\end{tabular}
+	\caption{Варианты раскроя трубы длиной 13 м}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{| c | c | c | } 
+		\hline
+		№ & 6 м & 3.5 м \\ 
+		\hline
+		4 & 1 & 0 \\\hline
+		5 & 0 & 2 \\\hline
+	\end{tabular}
+	\caption{Варианты раскроя трубы длиной 8 м}
+\end{table}
+
+
+Введём переменные, соответствующие вариантам раскроя
+\begin{itemize}[nosep]
+	\item $x_1$ --- №1,
+	
+	\item $x_2$ --- №2,
+	
+	\item $x_3$ --- №3,
+	
+	\item $x_4$ --- №4,
+	
+	\item $x_5$ --- №5,
+\end{itemize}
+
+где $x_j$ показывает, сколько длинных труб будет раскроено соответствующим способом. Напишем целевую функцию и ограничения в терминах переменных
+
+\[
+6x_1 + 6x_2 + 6x_3 + 4x_4 + 4x_5 \to \min_{x},
+\]
+\[
+2x_1 + x_2 + x_4 \ge 20,
+\]
+\[
+2x_2 + 3x_3 + 2x_5 \ge 12.
+\]
+
+\solution
+
+Сначала решим задачу с помощью геометрического метода. Для этого составим \hyperref[sec:duality]{двойственную} ей задачу.
+
+\[
+\begin{linear}{crrrrrrrrrrlc}
+	& 2x_1 & + & x_2 & & & + & x_4 & & \ge & 20 \quad\quad & \big| \quad y_1, \\
+	& & & 2x_2 & + & 3x_3 & & & + & 2x_5 \ge & 12 \quad\quad & \big| \quad y_2. \\
+\end{linear}
+\]
+
+Составим ограничения на переменные $y_1, y_2$
+\[
+\begin{linear}{crrrrl}
+	& 20y_1 & + & 12y_2 & \to & \max\limits_{(y_1, y_2)}, \\
+	& 2y_1 & & & \le & 6, \\
+	& y_1 & + & 2y_2 & \le & 6, \\
+	&  &  & 3y_2 & \le & 6, \\
+	& y_1 &  & & \le & 4, \\
+	&  &  & 2y_2 & \le & 4, \\
+\end{linear}
+\]
+
+Упросим систему неравеств:
+
+\[
+\begin{cases}
+	y_1 \le 3, \\
+	y_1 + 2y_2 \le 6, \\
+	y_2 \le 2, \\
+	y_1 \le 4. \\
+\end{cases}
+\]
+
+Неравенство $y_1 \le 3$ строже чем $y_1 \le 4$, поэтому второе можно не учитывать, имеем:
+
+\[
+\begin{cases}
+	y_1 \le 3, \\
+	y_1 + 2y_2 \le 6, \\
+	y_2 \le 2, \\
+\end{cases}
+\]
+
+Нарисуем область допустимых значений (рис. 4.11).
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[axis lines=middle, xlabel={$y_1$}, ylabel={$y_2$}, grid=major, width=0.7\textwidth, xmin=-1, xmax=6, ymin=-2, ymax=6]
+			\addplot[blue, thick] coordinates {(3,-2) (3,6)};
+			\addlegendentry{$y_1 = 3$}
+			
+			\addplot[domain=-1:6, samples=2, green, thick]{-1/2 * x + 3};
+			\addlegendentry{$y_1 + 2y_2 = 6$}
+			
+			\addplot[domain=-1:6, samples=2, red, thick]{2};
+			\addlegendentry{$y_2 = 2$}
+			
+			
+			\addplot[pattern=north east lines]
+			coordinates {
+				(0,0)
+				(0,2)
+				(2,2)
+				(3,3/2)
+				(3, 0)
+				(0,0)
+			};
+			
+			\addplot[only marks, mark=* ,] coordinates {(2, 2)};
+			\node at (axis cs:2,2) [anchor=south east]{$A$};
+			\addplot[only marks, mark=* ,] coordinates {(3, 3/2)};
+			\node at (axis cs:3,3/2) [anchor=south west]{$B$};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{}
+\end{figure}
+
+Нарисуем прямую $20y_1 + 12y_2 = 36 \; (c=36)$
+
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}
+		\begin{axis}[axis lines=middle, xlabel={$y_1$}, ylabel={$y_2$}, grid=major, width=0.7\textwidth, xmin=-1, xmax=6, ymin=-2, ymax=6]	
+			\addplot[domain=-1:6, samples=2, thick]{-20/12 * x + 3};
+			\addlegendentry{$20y_1 + 12y_2 = 36$}
+			
+			\addplot[pattern=north east lines]
+			coordinates {
+				(0,0)
+				(0,2)
+				(2,2)
+				(3,3/2)
+				(3, 0)
+				(0,0)
+			};
+			\addplot[only marks, mark=* ,] coordinates {(2, 2)};
+			\node at (axis cs:2,2) [anchor=south east]{$A$};
+			\addplot[only marks, mark=* ,] coordinates {(3, 3/2)};
+			\node at (axis cs:3,3/2) [anchor=south west]{$B$};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{}
+\end{figure}
+
+Параллельно передвигая эту прямую, можно понять, что максимальное $c$, при котором прямая пересекает область допустимых решений, это $c$, при котором прямая проходит через точку $B$. Найдем её координаты, пользуясь тем, что эта точка --- пересечение прямых $y_1 = 3$ и $y_1 + 2y_2 = 6$.
+\begin{align*}
+	&\begin{cases}
+		y_1 = 3, \\
+		y_1 + 2y_2 = 6;
+	\end{cases} \\
+	&\begin{cases}
+		y_1 = 3, \\
+		3 + 2y_2 = 6;
+	\end{cases}
+\end{align*}
+\[
+\Downarrow
+\]
+\[
+y_1 = 3,
+\]
+\[
+y_2 = \frac{3}{2} = 1.5.
+\]
+
+Таким образом, точка $B$ имеет координаты $(3, 1.5)$. Найдём $c'$ из соображения, что прямая $20y_1 + 12y_2 = c'$ проходит через точку $B$:
+\[
+20y_1 + 12y_2 = c',
+\]
+\[
+20 \cdot 3 + 12 \cdot 1.5 = c',
+\]
+\[
+c' = 78.
+\]
+
+Мы нашли оптимальное решение двойственной задачи, для нахождения оптимального решения прямой задачи воспользуемся \hyperref[def:complementary_slackness_conditions]{Соотношениями дополняющей нежёсткости}.
+
+\bigskip
+
+\textbf{Первое соотношение}
+
+Зная, что точка $B$ это --- пересечение прямых с номерами $1, 2$, сразу получаем
+\[
+\begin{linear}{crrl}
+	& x_1 & \ge & 0,  \\
+	& x_2 & \ge & 0,  \\
+	& x_3 & = & 0,  \\
+	& x_4 & = & 0,  \\
+	& x_5 & = & 0,  \\
+\end{linear}
+\]
+
+\textbf{Второе соотношение}
+
+Сразу напишем его с учётом результатов первого соотношения.
+\[
+\begin{linear}{crrl}
+	& y_1(2x_1 + x_2 - 20) & = & 0,  \\
+	& y_2(2x_2 - 12) & = & 0.  \\
+\end{linear}
+\]
+
+Найдём $x_1, x_2$:
+\begin{align*}
+	&\begin{cases}
+		2x_1 + x_2 = 20, \\
+		2x_2 = 12; \quad\quad\quad \Big| \quad \cdot 0.5
+	\end{cases} \\
+	&\begin{cases}
+		2x_1 + x_2 = 20, \\
+		x_2 = 6;
+	\end{cases}
+\end{align*}
+\[
+\Downarrow
+\]
+\[
+x_2 = 6,
+\]
+\[
+x_1 = \frac{20 - 6}{2};
+\]
+\[
+x_1 = 7.
+\]
+
+Найдем значение целевой функции при $x = (x_1, \dots, x_5) = (7, 6, 0, 0, 0)$
+\[
+6 \cdot 6 + 6 \cdot 7 + 6 \cdot 0 + 4 \cdot 0 + 4 \cdot 0 = 78 = c',
+\]
+
+Всё совпало.
+
+\textbf{Ответ}: $x^* = (7, 6, 0, 0, 0)$, $\min = 78$.
+
+\bigskip
+
+Решим теперь задачу помощью \hyperref[sec:simplex_algorithm]{Симплекс-метода}. Запишем задачу через равенство с переменными $y_i$:
+
+\[
+\begin{linear}{crrrrrrrrrrrrrrrl}
+	& \min &\big(&6x_1 & + & 6x_2 & + & 4x_3 & + & 4x_4& + & 4x_5 &\big), \\
+	&&& 2x_1 & + & 1x_2 && & + & 1x_4 &&& - & 1y_1 &&& = 20, \\
+	&&&&& 2x_2 & + & 3x_3 &&& + & 2x_5 & - & 1y_2 &&& = 12.
+\end{linear}
+\]
+
+\begin{enumerate}
+	\item[\fbox{Шаг 0}] Пусть начальный базис --- $\{x_1, x_3\}$ (не будем брать $\{x_1, x_2\}$, потому что это сразу даст оптимальное решение). Выразим базисные переменные и целевую функцию через не базисные
+	
+	\[
+	\begin{linear}{rrrrrrrrrr}
+		& 2x_1 & = & 20 & - & 1x_2 & - & 1x_4 & + & 1y_1, \\
+		& x_1 & = & 10 & - & \frac{1}{2}x_2 & - & \frac{1}{2}x_4 & + & \frac{1}{2}y_1; \\
+	\end{linear}
+	\]
+	
+	\[
+	\begin{linear}{rrrrrrrrrr}
+		& 3x_3 & = & 12 & - & 2x_2 & - & 2x_5 & + & 1y_2, \\
+		& x_3 & = & 4 & - & \frac{2}{3}x_3 & - & \frac{2}{3}x_5 & + & \frac{1}{3}y_2;
+	\end{linear}
+	\]
+	
+	\[
+	\begin{linear}{rrrrrrrrrrrrrrrrrrrrr}
+		& x_0 = &&&&& \cancel{6x_1} & + & 6x_2 & + & \cancel{6x_3} & + & 4x_4 & + & 4x_5 &&&&&& + \\
+		&& 6&(&10 &&& - &\frac{1}{2}x_2&&& - &\frac{1}{2}x_4& && + & \frac{1}{2}y_1 &&&) & + \\
+		&& 6&(&4 &&& - &\frac{2}{3}x_2&&&&& - & \frac{2}{3}x_5&&& + & \frac{1}{3}y_2&) & = \\
+		&&&& 84 &&& - &1x_2&&& + & 1x_4 & && + & 3y_1 & + & 2y_2 &.&
+	\end{linear}
+	\]
+	
+	\item[\fbox{Шаг 1}] Видно, что коэффициент перед $x_2$ в выражении $x_0$ отрицателен, значит текущее решение не оптимально.
+	
+	Добавим $x_2$ в базис, удалив из него одну переменную. Рассмотрим выражения базисных переменных. Коэффициент перед $x_3$ отрицателен и в $x_1$, и в $x_3$, поэтому на удаление есть 2 кандидата. Посчитаем соотношения свободных членов к коэффициенту перед $x_2$
+	\[
+	x_1: \quad \frac{10}{\frac{1}{2}} = 20,
+	\]
+	\[
+	x_3: \quad \frac{4}{\frac{2}{3}} = 6.
+	\]
+	
+	Минимальное из этих чисел --- $6$, поэтому удалим из базиса $x_3$ и добавим $x_2$. Таким образом, новый базис --- $\{x_1, x_2\}$.
+	
+	Выразим $x_2$ через не базисные переменные с помощью выражения для $x_3$
+	\[
+	\begin{linear}{rrrrrrrrrrr}
+		& \frac{2}{3}x_2 & = & 4 & - & 1x_3 & - & \frac{2}{3}x_5 & + & \frac{1}{3}y_2, \\
+		& x_2 & = & 6 & - & \frac{3}{2}x_3 & - & 1x_5 & + & \frac{1}{2}y_2. \\
+	\end{linear}
+	\]
+	
+	Исключим $x_2$ из $x_1$
+	\[
+	\begin{linear}{rrrrrrrrrrrrrrrrrrr}
+		& x_1 = &&& 10 & - &\cancel{\frac{1}{2}x_2}&&& - &\frac{1}{2}x_4& & & + &\frac{1}{2}y_1 &&&& + \\
+		&& -\frac{1}{2}&(&6 && & - &\frac{3}{2}x_3&&& - &1x_5&&& + &\frac{1}{2}y_2&) & = \\
+		&&&& 7 && & + &\frac{3}{4}x_3& - & \frac{1}{2}x_4 & + & \frac{1}{2}x_5& + & \frac{1}{2}y_1 & - & \frac{1}{4}y_2 &.&
+	\end{linear}
+	\]
+	
+	Исключим $x_2$ из $x_0$
+	\[
+	\begin{linear}{rrrrrrrrrrrrrrrrrrr}
+		& x_0 = &&& 84 & - &\cancel{x_2}&&& + & x_4 &&& + & 3y_1 & + & 2y_2 && + \\
+		&& -&(&6 &&& - & \frac{3}{2}x_3 &&& - & x_5 &&& + & \frac{1}{2}y_2&) & = \\
+		&&&& 78 &&& + &\frac{3}{2}x_3& + & x_4 & + & x_5 & + & 3y_1 & + & \frac{3}{2}y_2 &.&
+	\end{linear}
+	\]
+	
+	\item[\fbox{Шаг 2}] Видно, что все коэффициенты в $x_0$ положительны, значит текущее решение является оптимальным. Таким образом,
+	\[
+	x_1^* = 7, \quad x_2^* = 6, \quad x_3^* = 0, \quad x_4^* = 0, \quad x_5^* = 0.
+	\]
+	
+	\begin{note}
+		Также $y_1^* = y_2^* = 0$, однако в исходной задаче этих переменных нет.
+	\end{note}
+	
+	\textbf{Ответ}:
+	\begin{itemize}[nosep]
+		\item нужно взять 7 $\times$ 13 м и 6 $\times$ 8 м;
+		
+		\item каждую трубу длиной 13 м раскроить на 2 $\times$ 6 м;
+		
+		\item каждую трубу длиной 8 м раскроить на 1 $\times$ 6 м и 2 $\times$ 3.5 м;
+		
+		\item суммарные затраты составят 78 рублей.
 	\end{itemize}
 \end{enumerate}
