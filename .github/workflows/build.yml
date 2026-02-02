@@ -1,0 +1,99 @@
+name: Build PDF
+
+on:
+  push:
+    branches: [ main, ci-build-pdf ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [created, published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag version (e.g., v1.0.0)'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Inkscape
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y inkscape
+        
+    - name: Convert SVG to PDF
+      run: |
+        cd graphics
+        for svg in *.svg; do
+          if [ -f "$svg" ]; then
+            inkscape --export-type=pdf --export-latex --export-area-page --export-filename="${svg%.svg}.pdf" "$svg"
+          fi
+        done
+        
+    - name: Setup TeX Live and Build PDF
+      uses: xu-cheng/latex-action@v3
+      with:
+        root_file: MMMOD.tex
+        latexmk_use_xelatex: false
+        latexmk_use_lualatex: false
+        args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+        
+    - name: Get version tag
+      id: get_tag
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ github.event.inputs.tag }}" ]; then
+          echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+        elif [ "${{ github.event_name }}" == "release" ]; then
+          echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+        elif [ "${{ github.event_name }}" == "push" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          echo "tag=" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Upload PDF artifact
+      if: steps.get_tag.outputs.tag == ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: MMMOD.pdf
+        path: MMMOD.pdf
+        retention-days: 30
+        
+    - name: Create or Update Release
+      if: steps.get_tag.outputs.tag != ''
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.get_tag.outputs.tag }}
+        name: Release ${{ steps.get_tag.outputs.tag }}
+        files: MMMOD.pdf
+        draft: false
+        prerelease: false
+        make_latest: true
+        overwrite_files: true
+        
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install chktex
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chktex
+        
+    - name: Lint LaTeX files
+      run: |
+        chktex -q -n2 -n13 -n24 -n36 -n1 *.tex chapters/*.tex || true
+        echo "Linting completed"
+
